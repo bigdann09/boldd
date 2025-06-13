@@ -2,19 +2,25 @@ package handlers
 
 import (
 	"fmt"
+	"net/http"
 
-	"github.com/boldd/internal/api/handlers/auth"
+	"github.com/boldd/internal/server/handlers/auth"
+	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes() {
-	fmt.Println("Registering routes...")
+func RegisterRoutes(engine *gin.Engine) *gin.Engine {
+	fmt.Println("Registering application routes...")
 
-	// Register the auth routes
-	auth.Routes()
+	// Set Gin to release mode for production
+	gin.SetMode(gin.ReleaseMode)
+	engine.MaxMultipartMemory = 8 << 20 // 8MB
 
-	// You can add more route registrations here as needed
-	// For example:
-	// user.RegisterRoutes()
-	// product.RegisterRoutes()
-	// order.RegisterRoutes()
+	engine.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "Welcome to the Boldd API!")
+	})
+
+	// Register application routes
+	auth.Routes(engine)
+
+	return engine
 }
