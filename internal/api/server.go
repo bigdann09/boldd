@@ -33,9 +33,8 @@ func NewApplication(cfg *config.Config) *Application {
 	}
 
 	// set up the server
-	// fmt.Sprintf(":%d", cfg.Application.Port)
 	app.server = &http.Server{
-		Addr:         ":8009",
+		Addr:         fmt.Sprintf(":%d", cfg.Application.Port),
 		Handler:      app.registerroutes(),
 		IdleTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
