@@ -39,14 +39,16 @@ func Load(path string) (*Config, error) {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			log.Fatalf("config file not found %v", err)
+			log.Fatalf("Config file not found at %s: %v", viper.ConfigFileUsed(), err)
+		} else {
+			log.Fatalf("Error reading config file: %v", err)
 		}
 	}
 
-	var cfg *Config
-	if err := viper.Unmarshal(cfg); err != nil {
+	var cfg Config
+	if err := viper.Unmarshal(&cfg); err != nil {
 		log.Fatalf("unable to decode into struct %v", err)
 	}
 
-	return cfg, nil
+	return &cfg, nil
 }

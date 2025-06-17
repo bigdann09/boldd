@@ -9,12 +9,10 @@ import (
 
 func main() {
 	// Load the configuration
-	cfg, err := config.Load("/internal/config/config.yaml")
+	cfg, err := config.Load("$HOME/.config/boldd")
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
-
-	// fmt.Println(utils.ValidatePath("$HOME/.config/rune/config.yaml"))
 
 	server := api.NewApplication(cfg)
 	go server.Shutdown()

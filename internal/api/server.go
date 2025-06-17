@@ -22,6 +22,11 @@ type Application struct {
 }
 
 func NewApplication(cfg *config.Config) *Application {
+	// switch to release mode for production env
+	if cfg.ApplicationConfig.Environment == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	app := &Application{
 		Done:   make(chan bool, 1),
 		engine: gin.Default(),
@@ -70,6 +75,9 @@ func (app *Application) Run() error {
 }
 
 func (app *Application) registerroutes() *gin.Engine {
+	// register middlewares
+
+	// register routes
 	routes := routes.NewRouter(app.engine)
 	engine := routes.SetupRoutes()
 	return engine
