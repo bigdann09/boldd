@@ -3,18 +3,20 @@ package main
 import (
 	"log"
 
+	"github.com/boldd/internal/api"
 	"github.com/boldd/internal/config"
-	"github.com/boldd/internal/server"
 )
 
 func main() {
 	// Load the configuration
-	cfg, err := config.Load()
+	cfg, err := config.Load("/internal/config/config.yaml")
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	server := server.NewApplication(cfg)
+	// fmt.Println(utils.ValidatePath("$HOME/.config/rune/config.yaml"))
+
+	server := api.NewApplication(cfg)
 	go server.Shutdown()
 
 	if err := server.Run(); err != nil {

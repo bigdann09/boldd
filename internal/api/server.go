@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"context"
@@ -9,8 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	// "github.com/boldd/internal/api/handlers"
+	"github.com/boldd/internal/api/routes"
 	"github.com/boldd/internal/config"
-	"github.com/boldd/internal/server/handlers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,7 +31,7 @@ func NewApplication(cfg *config.Config) *Application {
 	// fmt.Sprintf(":%d", cfg.Application.Port)
 	app.server = &http.Server{
 		Addr:         ":8009",
-		Handler:      handlers.RegisterRoutes(app.engine),
+		Handler:      app.registerroutes(),
 		IdleTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
@@ -66,4 +67,10 @@ func (app *Application) Run() error {
 		return err
 	}
 	return nil
+}
+
+func (app *Application) registerroutes() *gin.Engine {
+	routes := routes.NewRouter(app.engine)
+	engine := routes.SetupRoutes()
+	return engine
 }

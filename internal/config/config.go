@@ -1,8 +1,15 @@
 package config
 
+import (
+	"log"
+
+	"github.com/spf13/viper"
+)
+
 type Config struct {
-	Application ApplicationConfig `mapstructure:"application"`
-	Database    DatabaseConfig    `mapstructure:"database"`
+	ApplicationConfig `mapstructure:"application"`
+	DatabaseConfig    `mapstructure:"database"`
+	AWSConfig         `mapstructure:"aws"`
 }
 
 type ApplicationConfig struct {
@@ -20,6 +27,26 @@ type DatabaseConfig struct {
 	SSLMode  string `mapstructure:"sslmode"`
 }
 
-func Load() (*Config, error) {
-	return &Config{}, nil
+type AWSConfig struct {
+	Credential string
+}
+
+func Load(path string) (*Config, error) {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(path)
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			log.Fatalf("config file not found %v", err)
+		}
+	}
+
+	var cfg *Config
+	if err := viper.Unmarshal(cfg); err != nil {
+		log.Fatalf("unable to decode into struct %v", err)
+	}
+
+	return cfg, nil
 }
