@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -34,7 +35,7 @@ func NewApplication(cfg *config.Config) *Application {
 
 	// set up the server
 	app.server = &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.Application.Port),
+		Addr:         fmt.Sprintf(":%d", cfg.ApplicationConfig.Port),
 		Handler:      app.registerroutes(),
 		IdleTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
