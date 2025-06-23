@@ -13,13 +13,20 @@ import (
 	// "github.com/boldd/internal/api/handlers"
 	"github.com/boldd/internal/api/routes"
 	"github.com/boldd/internal/config"
+	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Application struct {
-	Done   chan bool
-	engine *gin.Engine
-	server *http.Server
+	Done     chan bool
+	engine   *gin.Engine
+	server   *http.Server
+	services *Services
+}
+
+type Services struct {
+	db *gorm.DB
 }
 
 func NewApplication(cfg *config.Config) *Application {
@@ -41,6 +48,8 @@ func NewApplication(cfg *config.Config) *Application {
 		WriteTimeout: 30 * time.Second,
 	}
 
+	// register services
+	app.services = app.registerservices(cfg)
 	return app
 }
 
@@ -81,4 +90,19 @@ func (app *Application) registerroutes() *gin.Engine {
 	routes := routes.NewRouter(app.engine)
 	engine := routes.SetupRoutes()
 	return engine
+}
+
+func (app *Application) registerservices(cfg *config.Config) *Services {
+	// register database
+	db, err := persistence.NewDB(&cfg.DatabaseConfig)
+	if err != nil {
+		log.Println("could not connect to database")
+		panic(err)
+	}
+
+	// register redis
+
+	return &Services{
+		db,
+	}
 }
