@@ -18,12 +18,12 @@ func NewDB(cfg *config.DatabaseConfig) (*gorm.DB, error) {
 
 func formatToDSN(cfg *config.DatabaseConfig) string {
 	return fmt.Sprintf(
-		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
+		"host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
+		cfg.Host,
 		cfg.Username,
 		cfg.Password,
-		cfg.Host,
-		cfg.Port,
 		cfg.Database,
+		cfg.Port,
 		cfg.SSLMode,
 	)
 }

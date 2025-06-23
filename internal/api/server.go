@@ -10,23 +10,17 @@ import (
 	"syscall"
 	"time"
 
-	// "github.com/boldd/internal/api/handlers"
 	"github.com/boldd/internal/api/routes"
+	"github.com/boldd/internal/api/services"
 	"github.com/boldd/internal/config"
-	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type Application struct {
 	Done     chan bool
 	engine   *gin.Engine
 	server   *http.Server
-	services *Services
-}
-
-type Services struct {
-	db *gorm.DB
+	services *services.Service
 }
 
 func NewApplication(cfg *config.Config) *Application {
@@ -40,6 +34,9 @@ func NewApplication(cfg *config.Config) *Application {
 		engine: gin.Default(),
 	}
 
+	// register services
+	app.services = services.NewServices(cfg)
+
 	// set up the server
 	app.server = &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.ApplicationConfig.Port),
@@ -48,8 +45,6 @@ func NewApplication(cfg *config.Config) *Application {
 		WriteTimeout: 30 * time.Second,
 	}
 
-	// register services
-	app.services = app.registerservices(cfg)
 	return app
 }
 
@@ -64,8 +59,19 @@ func (app *Application) Shutdown() {
 
 	// shut down services running
 	if err := app.server.Shutdown(ctx); err != nil {
-		log.Printf("Server shutdown error: %v\n", err)
+		log.Fatalf("server shutdown error: %v\n", err)
 		return
+	}
+
+	// shutdown database service
+	sqlDB, err := app.services.DB.DB()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// close database
+	if err := sqlDB.Close(); err != nil {
+		log.Fatalf("could not shutdown database service %v", err)
 	}
 
 	<-ctx.Done()
@@ -87,22 +93,7 @@ func (app *Application) registerroutes() *gin.Engine {
 	// register middlewares
 
 	// register routes
-	routes := routes.NewRouter(app.engine)
+	routes := routes.NewRouter(app.engine, app.services)
 	engine := routes.SetupRoutes()
 	return engine
-}
-
-func (app *Application) registerservices(cfg *config.Config) *Services {
-	// register database
-	db, err := persistence.NewDB(&cfg.DatabaseConfig)
-	if err != nil {
-		log.Println("could not connect to database")
-		panic(err)
-	}
-
-	// register redis
-
-	return &Services{
-		db,
-	}
 }

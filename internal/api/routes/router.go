@@ -1,16 +1,17 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/boldd/internal/api/services"
+	"github.com/gin-gonic/gin"
+)
 
 type Routes struct {
-	engine *gin.Engine
-	// logger
-	// cache
-	// services
+	engine   *gin.Engine
+	services *services.Service
 }
 
-func NewRouter(engine *gin.Engine) *Routes {
-	return &Routes{engine}
+func NewRouter(engine *gin.Engine, services *services.Service) *Routes {
+	return &Routes{engine, services}
 }
 
 func (router *Routes) SetupRoutes() *gin.Engine {
