@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/boldd/internal/api/middlewares"
 	"github.com/boldd/internal/api/routes"
 	"github.com/boldd/internal/api/services"
 	"github.com/boldd/internal/config"
@@ -20,6 +21,7 @@ type Application struct {
 	Done     chan bool
 	engine   *gin.Engine
 	server   *http.Server
+	config   *config.Config
 	services *services.Service
 }
 
@@ -32,10 +34,11 @@ func NewApplication(cfg *config.Config) *Application {
 	app := &Application{
 		Done:   make(chan bool, 1),
 		engine: gin.Default(),
+		config: cfg,
 	}
 
 	// register services
-	app.services = services.NewServices(cfg)
+	app.services = services.NewServices(app.config)
 
 	// set up the server
 	app.server = &http.Server{
@@ -91,6 +94,8 @@ func (app *Application) Run() error {
 
 func (app *Application) registerroutes() *gin.Engine {
 	// register middlewares
+	middleware := middlewares.NewMiddleware(app.engine, app.services)
+	middleware.Register(app.config)
 
 	// register routes
 	routes := routes.NewRouter(app.engine, app.services)

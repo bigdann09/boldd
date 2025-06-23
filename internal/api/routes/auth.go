@@ -3,8 +3,7 @@ package routes
 import "github.com/boldd/internal/api/handlers"
 
 func (r Routes) authroutes() {
-	// register all services required
-	// usersrv := NewAuthService(database, logger, caching)
+	// TODO: register all required services (caching, commands etc..)
 
 	// register controller
 	ctrl := handlers.NewAuthController()
@@ -14,5 +13,4 @@ func (r Routes) authroutes() {
 	{
 		auth.GET("/register", ctrl.Register)
 	}
-
 }

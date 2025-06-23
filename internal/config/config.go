@@ -9,6 +9,7 @@ import (
 type Config struct {
 	ApplicationConfig `mapstructure:"application"`
 	DatabaseConfig    `mapstructure:"database"`
+	CorsConfig        `mapstructure:"cors"`
 	AWSConfig         `mapstructure:"aws"`
 }
 
@@ -25,6 +26,10 @@ type DatabaseConfig struct {
 	Password string `mapstructure:"password"`
 	Database string `mapstructure:"database"`
 	SSLMode  string `mapstructure:"sslmode"`
+}
+
+type CorsConfig struct {
+	AllowedOrigins []string `mapstructure:"allowed_origins"`
 }
 
 type AWSConfig struct {
