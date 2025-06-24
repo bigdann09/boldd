@@ -1,0 +1,10 @@
+services:
+  bolddapi:
+    image: bigdev/boldd:latest
+    build:
+      context: ./docker/api/docker
+    network:
+      boldd
+
+network:
+  driver: bridge

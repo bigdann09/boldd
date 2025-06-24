@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,6 +14,7 @@ import (
 	"github.com/boldd/internal/api/services"
 	"github.com/boldd/internal/config"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type Application struct {
@@ -62,30 +62,30 @@ func (app *Application) Shutdown() {
 
 	// shut down services running
 	if err := app.server.Shutdown(ctx); err != nil {
-		log.Fatalf("server shutdown error: %v\n", err)
+		app.services.Logger.Fatal("Server shutdown error", zap.Error(err))
 		return
 	}
 
 	// shutdown database service
 	sqlDB, err := app.services.DB.DB()
 	if err != nil {
-		log.Fatalln(err)
+		app.services.Logger.Fatal("Could not get database instance", zap.Error(err))
 	}
 
 	// close database
 	if err := sqlDB.Close(); err != nil {
-		log.Fatalf("could not shutdown database service %v", err)
+		app.services.Logger.Fatal("could not shutdown database service", zap.Error(err))
 	}
 
 	<-ctx.Done()
-	log.Println("Shutting down server...")
+	app.services.Logger.Info("Shutting down server...")
 
 	app.Done <- true
 }
 
 func (app *Application) Run() error {
 	// Start the application and block until it is stopped
-	log.Printf("✅ Server started successfully")
+	app.services.Logger.Info("✅ Server started successfully")
 	if err := app.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}

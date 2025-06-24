@@ -18,6 +18,7 @@ func NewUser(firstname, lastname, email, password string) *User {
 		Password:  password,
 	}
 }
+
 func (u *User) GetFullName() string {
 	return u.Firstname + " " + u.Lastname
 }
