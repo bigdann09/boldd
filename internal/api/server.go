@@ -77,6 +77,11 @@ func (app *Application) Shutdown() {
 		app.services.Logger.Fatal("could not shutdown database service", zap.Error(err))
 	}
 
+	// shutdown redis
+	if err := app.services.Redis.Conn().Close(); err != nil {
+		app.services.Logger.Fatal("could not shutdown redis service", zap.Error(err))
+	}
+
 	<-ctx.Done()
 	app.services.Logger.Info("Shutting down server...")
 
