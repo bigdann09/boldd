@@ -9,6 +9,7 @@ import (
 type Config struct {
 	ApplicationConfig `mapstructure:"application"`
 	DatabaseConfig    `mapstructure:"database"`
+	RedisConfig       `mapstructure:"redis"`
 	CorsConfig        `mapstructure:"cors"`
 	AWSConfig         `mapstructure:"aws"`
 }
@@ -30,6 +31,13 @@ type DatabaseConfig struct {
 
 type CorsConfig struct {
 	AllowedOrigins []string `mapstructure:"allowed_origins"`
+}
+
+type RedisConfig struct {
+	Address  string `mapstructure:"address"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
+	Protocol int    `mapstructure:"protocol"`
 }
 
 type AWSConfig struct {

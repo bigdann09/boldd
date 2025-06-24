@@ -5,7 +5,9 @@ import (
 
 	"github.com/boldd/internal/config"
 	"github.com/boldd/internal/infrastructure/persistence"
+	"github.com/boldd/internal/infrastructure/persistence/redis"
 	"github.com/boldd/pkgs/logger"
+	goredis "github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -13,6 +15,7 @@ import (
 type Service struct {
 	DB     *gorm.DB
 	Logger *zap.Logger
+	Redis  *goredis.Client
 }
 
 func NewServices(cfg *config.Config) *Service {
@@ -28,9 +31,11 @@ func NewServices(cfg *config.Config) *Service {
 	defer logger.Sync()
 
 	// register redis
+	redis := redis.NewRedisClient(&cfg.RedisConfig)
 
 	return &Service{
 		DB:     db,
 		Logger: logger,
+		Redis:  redis,
 	}
 }
