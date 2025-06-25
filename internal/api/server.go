@@ -12,9 +12,10 @@ import (
 	"github.com/boldd/internal/api/middlewares"
 	"github.com/boldd/internal/api/routes"
 	"github.com/boldd/internal/api/services"
-	"github.com/boldd/internal/infrastructure/config"
+	"github.com/boldd/internal/config"
 	"github.com/boldd/internal/infrastructure/monitoring"
 	"github.com/gin-gonic/gin"
+	"github.com/go-swagno/swagno"
 	"go.uber.org/zap"
 )
 
@@ -24,6 +25,7 @@ type Application struct {
 	server   *http.Server
 	config   *config.Config
 	services *services.Service
+	swagger  *swagno.Swagger
 	metrics  *monitoring.Metrics
 }
 
@@ -42,6 +44,13 @@ func NewApplication(cfg *config.Config) *Application {
 	// register services
 	app.services = services.NewServices(app.config)
 	app.metrics = monitoring.NewMetrics()
+
+	// register swagger
+	app.swagger = swagno.New(swagno.Config{
+		Title:   "Boldd Ecommerce API",
+		Version: "v1.0.0",
+		Host:    cfg.ApplicationConfig.URL,
+	})
 
 	// set up the server
 	app.server = &http.Server{
@@ -106,7 +115,7 @@ func (app *Application) registerroutes() *gin.Engine {
 	middleware.Register(app.config, app.metrics)
 
 	// register routes
-	routes := routes.NewRouter(app.engine, app.services)
+	routes := routes.NewRouter(app.engine, app.services, app.swagger)
 	engine := routes.SetupRoutes()
 	return engine
 }

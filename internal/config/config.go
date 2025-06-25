@@ -18,6 +18,7 @@ type Config struct {
 
 type ApplicationConfig struct {
 	Port        int    `mapstructure:"port"`
+	URL         string `mapstructure:"url"`
 	Timezone    string `mapstructure:"timezone"`
 	Environment string `mapstructure:"environment"`
 }

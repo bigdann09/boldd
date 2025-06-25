@@ -1,6 +1,9 @@
 package routes
 
-import "github.com/boldd/internal/api/handlers"
+import (
+	"github.com/boldd/internal/api/handlers"
+	"github.com/go-swagno/swagno/components/endpoint"
+)
 
 func (r Routes) authroutes() {
 	// TODO: register all required services (caching, commands etc..)
@@ -13,4 +16,14 @@ func (r Routes) authroutes() {
 	{
 		auth.GET("/register", ctrl.Register)
 	}
+
+	// register endpoints
+	r.swagger.AddEndpoints([]*endpoint.EndPoint{
+		endpoint.New(
+			endpoint.GET,
+			"/register",
+			endpoint.WithTags("auth"),
+			endpoint.WithDescription("Register a new user"),
+		),
+	})
 }

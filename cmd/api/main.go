@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/boldd/internal/api"
-	"github.com/boldd/internal/infrastructure/config"
+	"github.com/boldd/internal/config"
 )
 
 func main() {

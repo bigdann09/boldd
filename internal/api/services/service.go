@@ -3,7 +3,7 @@ package services
 import (
 	"log"
 
-	"github.com/boldd/internal/infrastructure/config"
+	"github.com/boldd/internal/config"
 	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/boldd/internal/infrastructure/persistence/redis"
 	"github.com/boldd/pkgs/logger"

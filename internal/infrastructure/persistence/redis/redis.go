@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"github.com/boldd/internal/infrastructure/config"
+	"github.com/boldd/internal/config"
 	goredis "github.com/redis/go-redis/v9"
 )
 
