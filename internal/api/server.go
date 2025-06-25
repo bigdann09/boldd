@@ -13,6 +13,7 @@ import (
 	"github.com/boldd/internal/api/routes"
 	"github.com/boldd/internal/api/services"
 	"github.com/boldd/internal/infrastructure/config"
+	"github.com/boldd/internal/infrastructure/monitoring"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -23,6 +24,7 @@ type Application struct {
 	server   *http.Server
 	config   *config.Config
 	services *services.Service
+	metrics  *monitoring.Metrics
 }
 
 func NewApplication(cfg *config.Config) *Application {
@@ -39,6 +41,7 @@ func NewApplication(cfg *config.Config) *Application {
 
 	// register services
 	app.services = services.NewServices(app.config)
+	app.metrics = monitoring.NewMetrics()
 
 	// set up the server
 	app.server = &http.Server{
@@ -100,7 +103,7 @@ func (app *Application) Run() error {
 func (app *Application) registerroutes() *gin.Engine {
 	// register middlewares
 	middleware := middlewares.NewMiddleware(app.engine, app.services)
-	middleware.Register(app.config)
+	middleware.Register(app.config, app.metrics)
 
 	// register routes
 	routes := routes.NewRouter(app.engine, app.services)

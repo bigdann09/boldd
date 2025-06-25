@@ -17,5 +17,6 @@ func NewRouter(engine *gin.Engine, services *services.Service) *Routes {
 func (router *Routes) SetupRoutes() *gin.Engine {
 	router.authroutes()
 	router.healthroute()
+	router.miscelleneousroute()
 	return router.engine
 }
