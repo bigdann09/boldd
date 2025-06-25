@@ -1,5 +1,6 @@
 services:
   bolddapi:
+    container_name: boldd
     image: bigdev/boldd:latest
     build:
       context: .
