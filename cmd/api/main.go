@@ -9,11 +9,16 @@ import (
 
 func main() {
 	// Load the configuration
-	cfg, err := config.Load("$HOME/.config/boldd")
+	path, err := config.LoadConfigPath()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	cfg, err := config.Load(path)
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
-
+	// "$HOME/.config/boldd"
 	server := api.NewApplication(cfg)
 	go server.Shutdown()
 

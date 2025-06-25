@@ -1,7 +1,9 @@
 package config
 
 import (
+	"errors"
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -64,4 +66,12 @@ func Load(path string) (*Config, error) {
 	}
 
 	return &cfg, nil
+}
+
+func LoadConfigPath() (string, error) {
+	path := os.Getenv("CONFIG_PATH")
+	if path == "" {
+		return "", errors.New("config path not found or configured")
+	}
+	return path, nil
 }
