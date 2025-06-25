@@ -2,9 +2,15 @@ services:
   bolddapi:
     image: bigdev/boldd:latest
     build:
-      context: ./docker/api/docker
-    network:
-      boldd
+      context: .
+      dockerfile: docker/api/Dockerfile
+      args:
+        CONFIG_PATH: ${CONFIG_PATH:-/etc/boldd/config.yaml}
+    ports:
+      - 8002:8002
+    networks:
+      - boldd_api
 
-network:
-  driver: bridge
+networks:
+  boldd_api:
+    driver: bridge

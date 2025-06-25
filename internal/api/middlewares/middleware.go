@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/boldd/internal/api/services"
-	"github.com/boldd/internal/config"
+	"github.com/boldd/internal/infrastructure/config"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )

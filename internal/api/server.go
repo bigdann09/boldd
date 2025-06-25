@@ -12,7 +12,7 @@ import (
 	"github.com/boldd/internal/api/middlewares"
 	"github.com/boldd/internal/api/routes"
 	"github.com/boldd/internal/api/services"
-	"github.com/boldd/internal/config"
+	"github.com/boldd/internal/infrastructure/config"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )

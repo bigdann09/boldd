@@ -3,7 +3,7 @@ package persistence
 import (
 	"fmt"
 
-	"github.com/boldd/internal/config"
+	"github.com/boldd/internal/infrastructure/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/boldd/internal/api"
-	"github.com/boldd/internal/config"
+	"github.com/boldd/internal/infrastructure/config"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
-	// "$HOME/.config/boldd"
+
 	server := api.NewApplication(cfg)
 	go server.Shutdown()
 
