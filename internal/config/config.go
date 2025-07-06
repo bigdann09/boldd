@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -70,9 +71,26 @@ func Load(path string) (*Config, error) {
 }
 
 func LoadConfigPath() (string, error) {
-	path := os.Getenv("CONFIG_PATH")
-	if path == "" {
-		return "", errors.New("config path not found or configured")
+	if err := godotenv.Load(); err != nil {
+		return "", err
 	}
+
+	env := os.Getenv("ENVIRONMENT")
+	if env == "" {
+		return "", errors.New("development environment not provided")
+	}
+
+	var path string
+	switch env {
+	case "docker_development":
+		path = "/app/boldd"
+	case "development":
+		path = "$HOME/.config/boldd/"
+	case "production":
+		path = "/etc/boldd"
+	default:
+		path = "$HOME/.config/boldd/"
+	}
+
 	return path, nil
 }

@@ -8,7 +8,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o boldd cmd/api/main.go
 # Final stage
 FROM alpine:latest
 WORKDIR /app
-COPY --from=builder /ecommerce-api .
-# COPY migrations ./migrations
-EXPOSE ${APP_PORT}
+COPY --from=builder /app/boldd /app/boldd
+EXPOSE ${APP_PORT:-8003}
 CMD ["/app/boldd"]

@@ -1,24 +1,25 @@
 services:
   bolddapi:
     container_name: boldd
+    image: bigdev/boldd:latest
     build:
       context: .
       dockerfile: docker/api/Dockerfile
     ports:
       - 8003:8003
-    volumes:
-      - ${HOME}/.config/boldd/config.yaml:app/boldd/config.yaml:ro
     networks:
       - boldd_api
     depends_on:
       - postgresdb
+      - migrate:
+        condition: service_completed_successfully
 
   postgresdb:
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-boldd}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - ":5432"
     volumes:
@@ -26,7 +27,7 @@ services:
     networks:
       - boldd_api
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-boldd}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,11 +37,11 @@ services:
     container_name: boldd_migrations
     volumes:
       - ./internal/infrastructure/persistence/migrations:/migrations:ro
-    command: ["-path", "/migrations", "-database", "postgres://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgresdb:5432/${DB_NAME:-boldd}?sslmode=disable", "up"]
+    command: ["-path", "/migrations", "-database", "postgres://${DB_USER}:${DB_PASSWORD}@postgresdb:5432/${DB_NAME}?sslmode=disable", "up"]
     depends_on:
       postgresdb:
         condition: service_healthy
-    networks:
+      networks:
         - boldd_api
 
 networks:
