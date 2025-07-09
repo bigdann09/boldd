@@ -4,18 +4,20 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Firstname string
-	Lastname  string
-	Email     string
-	Password  string
+	Firstname     string
+	Lastname      string
+	Email         string
+	Password      string
+	ReferralToken string
 }
 
 func NewUser(firstname, lastname, email, password string) *User {
 	return &User{
-		Firstname: firstname,
-		Lastname:  lastname,
-		Email:     email,
-		Password:  password,
+		Firstname:     firstname,
+		Lastname:      lastname,
+		Email:         email,
+		Password:      password,
+		ReferralToken: "",
 	}
 }
 

@@ -1,12 +1,16 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/boldd/internal/application/auth"
+	"github.com/gin-gonic/gin"
+)
 
 type AuthController struct {
+	authsrv auth.IAuthCommandService
 }
 
-func NewAuthController() *AuthController {
-	return &AuthController{}
+func NewAuthController(authsrv auth.IAuthCommandService) *AuthController {
+	return &AuthController{authsrv}
 }
 
 func (ctrl AuthController) Register(c *gin.Context)                {}

@@ -2,28 +2,20 @@ package routes
 
 import (
 	"github.com/boldd/internal/api/handlers"
-	"github.com/go-swagno/swagno/components/endpoint"
+	"github.com/boldd/internal/application/auth"
 )
 
 func (r Routes) authroutes() {
-	// TODO: register all required services (caching, commands etc..)
+	// register required services
+	command := auth.NewAuthCommandService()
 
 	// register controller
-	ctrl := handlers.NewAuthController()
+	ctrl := handlers.NewAuthController(command)
 
 	// register routes
 	auth := r.engine.Group("auth")
 	{
-		auth.GET("/register", ctrl.Register)
+		auth.POST("/login", ctrl.Login)
+		auth.POST("/register", ctrl.Register)
 	}
-
-	// register endpoints
-	r.swagger.AddEndpoints([]*endpoint.EndPoint{
-		endpoint.New(
-			endpoint.GET,
-			"/register",
-			endpoint.WithTags("auth"),
-			endpoint.WithDescription("Register a new user"),
-		),
-	})
 }
