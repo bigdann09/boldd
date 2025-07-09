@@ -1,4 +1,56 @@
+definitions:
+  auth.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      fullname:
+        maxLength: 100
+        minLength: 15
+        type: string
+      password:
+        minLength: 6
+        type: string
+      phonenumber:
+        type: string
+    required:
+    - email
+    - fullname
+    - password
+    - phonenumber
+    type: object
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: dann.dev09@gmail.com
+    name: Daniel Ibok
+    url: https://bigdann.vercel.com
+paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: '"Registers a new user"'
+      parameters:
+      - description: User registration details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: body
+          schema:
+            $ref: '#/definitions/auth.AuthResponse'
+      summary: '"register user"'
+      tags:
+      - Auth
 swagger: "2.0"

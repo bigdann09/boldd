@@ -7,6 +7,9 @@ import (
 	"github.com/boldd/internal/config"
 )
 
+// @contact.name	Daniel Ibok
+// @contact.url	https://bigdann.vercel.com
+// @contact.email	dann.dev09@gmail.com
 func main() {
 	// Load the configuration
 	path, err := config.LoadConfigPath()

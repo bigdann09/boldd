@@ -14,3 +14,6 @@ docker-migrate:
 
 docker-down:
 	docker run --rm -v $(shell pwd)/infrastructure/persistence/migrations:/migrations migrate/migrate -path=/migrations -database "postgres://postgres:password@localhost:5432/postgres?sslmode=disable" down
+
+swag-generate:
+	swag init -g cmd/api/main.go -o internal/api/docs

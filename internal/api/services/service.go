@@ -6,6 +6,7 @@ import (
 	"github.com/boldd/internal/config"
 	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/boldd/internal/infrastructure/persistence/redis"
+	"github.com/boldd/internal/infrastructure/validator"
 	"github.com/boldd/pkgs/logger"
 	goredis "github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
@@ -25,6 +26,10 @@ func NewServices(cfg *config.Config) *Service {
 		log.Println("could not connect to database")
 		panic(err)
 	}
+
+	// register custom validators
+	validator := validator.NewValidator()
+	validator.RegisterValidators()
 
 	// register logger
 	logger := logger.NewLogger(cfg.Environment)
