@@ -3,11 +3,13 @@ package routes
 import (
 	"github.com/boldd/internal/api/handlers"
 	"github.com/boldd/internal/application/auth"
+	"github.com/boldd/internal/infrastructure/persistence/repository"
 )
 
 func (r Routes) authroutes() {
 	// register required services
-	command := auth.NewAuthCommandService()
+	userRepository := repository.NewUserRepository(r.services.DB)
+	command := auth.NewAuthCommandService(userRepository)
 
 	// register controller
 	ctrl := handlers.NewAuthController(command)

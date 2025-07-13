@@ -1,19 +1,40 @@
 package validator
 
-import "github.com/go-playground/validator/v10"
+import (
+	"fmt"
+
+	"github.com/boldd/internal/domain/user"
+	"github.com/boldd/internal/infrastructure/persistence/repository"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
+)
 
 type Validator struct {
-	validator *validator.Validate
+	validator      *validator.Validate
+	userRepository user.IUserRepository
 }
 
-func NewValidator() *Validator {
+func NewValidator(db *gorm.DB) *Validator {
 	v := validator.New()
 	validator := &Validator{
-		validator: v,
+		validator:      v,
+		userRepository: repository.NewUserRepository(db),
 	}
 	return validator
 }
 
 func (v *Validator) RegisterValidators() {
+	if validator, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		validator.RegisterValidation("unique_email", v.uniqueEmail)
+	}
+}
 
+func (v *Validator) uniqueEmail(fl validator.FieldLevel) bool {
+	field := fl.GetTag()
+	value := fl.Param()
+
+	fmt.Printf("%#v", field)
+	fmt.Println("value", value)
+	return true
 }

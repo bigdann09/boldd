@@ -28,7 +28,7 @@ func NewServices(cfg *config.Config) *Service {
 	}
 
 	// register custom validators
-	validator := validator.NewValidator()
+	validator := validator.NewValidator(db)
 	validator.RegisterValidators()
 
 	// register logger

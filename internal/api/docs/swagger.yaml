@@ -11,19 +11,19 @@ definitions:
       email:
         type: string
       fullname:
-        maxLength: 100
-        minLength: 15
+        maxLength: 60
+        minLength: 6
         type: string
       password:
         minLength: 6
         type: string
-      phonenumber:
+      phone_number:
         type: string
     required:
     - email
     - fullname
     - password
-    - phonenumber
+    - phone_number
     type: object
 info:
   contact:

@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/boldd/internal/application/auth"
 	"github.com/boldd/internal/infrastructure/validator"
 	"github.com/gin-gonic/gin"
@@ -29,6 +31,16 @@ func (ctrl AuthController) Register(c *gin.Context) {
 		validator.GetErrors(c, err)
 		return
 	}
+
+	response, err := ctrl.authsrv.Register(&payload)
+	if err != nil {
+		body := err.(map[string]interface{})
+		c.JSON(body["code"].(int), gin.H{
+			"message": body["error"].(error).Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (ctrl AuthController) Login(c *gin.Context)                   {}

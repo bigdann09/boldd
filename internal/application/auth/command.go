@@ -1,9 +1,11 @@
 package auth
 
+import "github.com/boldd/internal/domain/user"
+
 type IAuthCommandService interface {
 	Login()
 	Logout()
-	Register()
+	Register(payload *RegisterRequest) (*AuthResponse, interface{})
 	VerifyEmail()
 	RefreshToken()
 	ForgotPassword()
@@ -11,14 +13,28 @@ type IAuthCommandService interface {
 }
 
 type AuthCommandService struct {
+	userRepository user.IUserRepository
 }
 
-func NewAuthCommandService() *AuthCommandService {
-	return &AuthCommandService{}
+func NewAuthCommandService(userRepository user.IUserRepository) *AuthCommandService {
+	return &AuthCommandService{userRepository}
 }
 
-func (srv *AuthCommandService) Register() {
+func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
+	// register user
+	newUser := user.NewUser(payload.FullName, payload.Email, payload.PhoneNumber, payload.Password)
+	err := srv.userRepository.Create(newUser)
+	if err != nil {
+		return &AuthResponse{}, map[string]interface{}{"error": err, "code": 500}
+	}
 
+	// TODO: send mail
+
+	// return response payload
+	return &AuthResponse{
+		AccessToken:  "access token",
+		RefreshToken: "refresh token",
+	}, nil
 }
 
 func (srv *AuthCommandService) Login() {

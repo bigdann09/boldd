@@ -1,37 +1,30 @@
-package domain
+package user
 
 import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Firstname     string
-	Lastname      string
+	Fullname      string
 	Email         string
+	PhoneNumber   string
 	Password      string
 	ReferralToken string
 }
 
-func NewUser(firstname, lastname, email, password string) *User {
+func NewUser(fullname, email, phoneNumber, password string) *User {
 	return &User{
-		Firstname:     firstname,
-		Lastname:      lastname,
+		Fullname:      fullname,
 		Email:         email,
 		Password:      password,
+		PhoneNumber:   phoneNumber,
 		ReferralToken: "",
 	}
 }
 
 func (u *User) GetFullName() string {
-	return u.Firstname + " " + u.Lastname
+	return u.Fullname
 }
 
 func (u *User) GetEmail() string {
 	return u.Email
-}
-
-func (u *User) UpdateUser(firstname, lastname, email, password string) {
-	u.Firstname = firstname
-	u.Lastname = lastname
-	u.Email = email
-	u.Password = password
 }

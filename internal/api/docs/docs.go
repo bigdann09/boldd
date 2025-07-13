@@ -72,7 +72,7 @@ const docTemplate = `{
                 "email",
                 "fullname",
                 "password",
-                "phonenumber"
+                "phone_number"
             ],
             "properties": {
                 "email": {
@@ -80,14 +80,14 @@ const docTemplate = `{
                 },
                 "fullname": {
                     "type": "string",
-                    "maxLength": 100,
-                    "minLength": 15
+                    "maxLength": 60,
+                    "minLength": 6
                 },
                 "password": {
                     "type": "string",
                     "minLength": 6
                 },
-                "phonenumber": {
+                "phone_number": {
                     "type": "string"
                 }
             }
