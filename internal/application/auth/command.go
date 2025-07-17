@@ -4,6 +4,7 @@ import (
 	"github.com/boldd/internal/domain/user"
 	"github.com/boldd/internal/infrastructure/auth/jwt"
 	"github.com/boldd/pkgs/utils"
+	"go.uber.org/zap"
 )
 
 type IAuthCommandService interface {
@@ -19,14 +20,15 @@ type IAuthCommandService interface {
 type AuthCommandService struct {
 	userRepository user.IUserRepository
 	tokensrv       jwt.ITokenService
+	logger         *zap.Logger
 }
 
-func NewAuthCommandService(userRepository user.IUserRepository, tokensrv jwt.ITokenService) *AuthCommandService {
-	return &AuthCommandService{userRepository, tokensrv}
+func NewAuthCommandService(userRepository user.IUserRepository, tokensrv jwt.ITokenService, logger *zap.Logger) *AuthCommandService {
+	return &AuthCommandService{userRepository, tokensrv, logger}
 }
 
 func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
-	// register user
+	srv.logger.Info("adding new user to database")
 	newUser := user.NewUser(
 		payload.FullName,
 		payload.Email,
@@ -35,15 +37,19 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 	)
 	err := srv.userRepository.Create(newUser)
 	if err != nil {
+		srv.logger.Error("there was an error adding user", zap.Error(err))
 		return &AuthResponse{}, map[string]interface{}{"error": err, "code": 500}
 	}
 
-	// Assign Roles
-	// err = srv.userRepository.AssignRole(newUser.ID, "customer")
+	srv.logger.Info("assign customer role to new user")
+	if err = srv.userRepository.AssignRole(int(newUser.ID), "customer"); err != nil {
+		srv.logger.Error("error assigning role to user", zap.Error(err))
+		// TODO: Delete user record
+		return &AuthResponse{}, map[string]interface{}{"error": "there was an error creating user account", "code": 500}
+	}
 
 	// TODO: send mail
 
-	// return response payload
 	return &AuthResponse{
 		AccessToken:  srv.tokensrv.GenerateAccessToken(int(newUser.ID), "customer"),
 		RefreshToken: srv.tokensrv.GenerateRefreshToken(int(newUser.ID)),

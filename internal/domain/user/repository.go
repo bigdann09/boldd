@@ -4,4 +4,5 @@ type IUserRepository interface {
 	Create(user *User) error
 	Find(id int) (interface{}, error)
 	EmailExists(email string) bool
+	AssignRole(userID int, role string) error
 }

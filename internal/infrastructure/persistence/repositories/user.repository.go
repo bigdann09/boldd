@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"github.com/boldd/internal/domain/user"
 	"gorm.io/gorm"
 )
@@ -28,4 +30,20 @@ func (repo UserRepository) EmailExists(email string) bool {
 	var exists bool
 	repo.db.Raw("select exists (select 1 from users where email = ?)", email).Scan(&exists)
 	return exists
+}
+
+func (repo UserRepository) AssignRole(userID int, role string) error {
+	// check if role exists and retrieve data
+	roleRepository := NewRoleRepository(repo.db)
+	data, err := roleRepository.FindByName(role)
+	if err != nil {
+		return err
+	}
+
+	if data.Name == "" || data.ID == 0 {
+		return fmt.Errorf("role %s does not exists", role)
+	}
+
+	result := repo.db.Exec("INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)", userID, data.ID)
+	return result.Error
 }

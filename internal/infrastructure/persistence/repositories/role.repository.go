@@ -20,9 +20,15 @@ func (repo RoleRepository) Create(role *role.Role) error {
 	return result.Error
 }
 
-func (repo RoleRepository) Find(id int) (interface{}, error) {
-	var response interface{}
+func (repo RoleRepository) Find(id int) (role.RoleResponse, error) {
+	var response role.RoleResponse
 	result := repo.db.Table("roles").Where("id = ?", id).Scan(&response)
+	return response, result.Error
+}
+
+func (repo RoleRepository) FindByName(name string) (role.RoleResponse, error) {
+	var response role.RoleResponse
+	result := repo.db.Table("roles").Where("name = ?", name).Scan(&response)
 	return response, result.Error
 }
 
