@@ -7,6 +7,7 @@ import (
 	"github.com/boldd/internal/infrastructure/auth/jwt"
 	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/boldd/internal/infrastructure/persistence/redis"
+	seeder "github.com/boldd/internal/infrastructure/persistence/seeders"
 	"github.com/boldd/internal/infrastructure/validator"
 	"github.com/boldd/pkgs/logger"
 	goredis "github.com/redis/go-redis/v9"
@@ -42,6 +43,10 @@ func NewServices(cfg *config.Config) *Service {
 
 	// register token service
 	jwt := jwt.NewTokenService(&cfg.JSWConfig)
+
+	// register seeders
+	seeder := seeder.NewSeeder(db, logger)
+	seeder.Run()
 
 	return &Service{
 		DB:     db,

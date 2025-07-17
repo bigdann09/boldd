@@ -2,7 +2,7 @@ package validator
 
 import (
 	"github.com/boldd/internal/domain/user"
-	"github.com/boldd/internal/infrastructure/persistence/repository"
+	"github.com/boldd/internal/infrastructure/persistence/repositories"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
@@ -17,7 +17,7 @@ func NewValidator(db *gorm.DB) *Validator {
 	v := validator.New()
 	validator := &Validator{
 		validator:      v,
-		userRepository: repository.NewUserRepository(db),
+		userRepository: repositories.NewUserRepository(db),
 	}
 	return validator
 }

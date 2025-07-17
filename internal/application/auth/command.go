@@ -18,11 +18,11 @@ type IAuthCommandService interface {
 
 type AuthCommandService struct {
 	userRepository user.IUserRepository
-	token          jwt.ITokenService
+	tokensrv       jwt.ITokenService
 }
 
-func NewAuthCommandService(userRepository user.IUserRepository, token jwt.ITokenService) *AuthCommandService {
-	return &AuthCommandService{userRepository, token}
+func NewAuthCommandService(userRepository user.IUserRepository, tokensrv jwt.ITokenService) *AuthCommandService {
+	return &AuthCommandService{userRepository, tokensrv}
 }
 
 func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
@@ -38,12 +38,15 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		return &AuthResponse{}, map[string]interface{}{"error": err, "code": 500}
 	}
 
+	// Assign Roles
+	// err = srv.userRepository.AssignRole(newUser.ID, "customer")
+
 	// TODO: send mail
 
 	// return response payload
 	return &AuthResponse{
-		AccessToken:  srv.token.GenerateAccessToken(int(newUser.ID), "customer"),
-		RefreshToken: srv.token.GenerateRefreshToken(int(newUser.ID)),
+		AccessToken:  srv.tokensrv.GenerateAccessToken(int(newUser.ID), "customer"),
+		RefreshToken: srv.tokensrv.GenerateRefreshToken(int(newUser.ID)),
 	}, nil
 }
 

@@ -1,9 +1,13 @@
 package user
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
+	UUID          string
 	Fullname      string
 	Email         string
 	PhoneNumber   string
@@ -13,6 +17,7 @@ type User struct {
 
 func NewUser(fullname, email, phoneNumber, password string) *User {
 	return &User{
+		UUID:          uuid.NewString(),
 		Fullname:      fullname,
 		Email:         email,
 		Password:      password,
