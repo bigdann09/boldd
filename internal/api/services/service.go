@@ -18,7 +18,7 @@ type Service struct {
 	DB     *gorm.DB
 	Logger *zap.Logger
 	Redis  *goredis.Client
-	token  jwt.ITokenService
+	Token  jwt.ITokenService
 }
 
 func NewServices(cfg *config.Config) *Service {
@@ -47,6 +47,6 @@ func NewServices(cfg *config.Config) *Service {
 		DB:     db,
 		Logger: logger,
 		Redis:  redis,
-		token:  jwt,
+		Token:  jwt,
 	}
 }

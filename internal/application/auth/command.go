@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/boldd/internal/domain/user"
+	"github.com/boldd/internal/infrastructure/auth/jwt"
 	"github.com/boldd/pkgs/utils"
 )
 
@@ -17,15 +18,21 @@ type IAuthCommandService interface {
 
 type AuthCommandService struct {
 	userRepository user.IUserRepository
+	token          jwt.ITokenService
 }
 
-func NewAuthCommandService(userRepository user.IUserRepository) *AuthCommandService {
-	return &AuthCommandService{userRepository}
+func NewAuthCommandService(userRepository user.IUserRepository, token jwt.ITokenService) *AuthCommandService {
+	return &AuthCommandService{userRepository, token}
 }
 
 func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
 	// register user
-	newUser := user.NewUser(payload.FullName, payload.Email, payload.PhoneNumber, utils.HashPassword(payload.Password))
+	newUser := user.NewUser(
+		payload.FullName,
+		payload.Email,
+		payload.PhoneNumber,
+		utils.HashPassword(payload.Password),
+	)
 	err := srv.userRepository.Create(newUser)
 	if err != nil {
 		return &AuthResponse{}, map[string]interface{}{"error": err, "code": 500}
@@ -35,8 +42,8 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 
 	// return response payload
 	return &AuthResponse{
-		AccessToken:  "access token",
-		RefreshToken: "refresh token",
+		AccessToken:  srv.token.GenerateAccessToken(int(newUser.ID), "customer"),
+		RefreshToken: srv.token.GenerateRefreshToken(int(newUser.ID)),
 	}, nil
 }
 

@@ -9,7 +9,7 @@ import (
 func (r Routes) authroutes() {
 	// register required services
 	userRepository := repository.NewUserRepository(r.services.DB)
-	command := auth.NewAuthCommandService(userRepository)
+	command := auth.NewAuthCommandService(userRepository, r.services.Token)
 
 	// register controller
 	ctrl := handlers.NewAuthController(command)
