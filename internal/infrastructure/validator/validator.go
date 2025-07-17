@@ -1,8 +1,6 @@
 package validator
 
 import (
-	"fmt"
-
 	"github.com/boldd/internal/domain/user"
 	"github.com/boldd/internal/infrastructure/persistence/repository"
 	"github.com/gin-gonic/gin/binding"
@@ -31,10 +29,8 @@ func (v *Validator) RegisterValidators() {
 }
 
 func (v *Validator) uniqueEmail(fl validator.FieldLevel) bool {
-	field := fl.GetTag()
-	value := fl.Param()
+	email := fl.Field()
 
-	fmt.Printf("%#v", field)
-	fmt.Println("value", value)
-	return true
+	itExists := v.userRepository.EmailExists(email.String())
+	return !itExists
 }

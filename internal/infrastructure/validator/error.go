@@ -40,6 +40,8 @@ func customMessages(fe validator.FieldError) string {
 		return fmt.Sprintf("%s minimum length is %s characters", strings.ToLower(fe.Field()), fe.Param())
 	case "max":
 		return fmt.Sprintf("%s maximum length is %s characters", strings.ToLower(fe.Field()), fe.Param())
+	case "unique_email":
+		return fmt.Sprintf("%s (%s) has already been taken", strings.ToLower(fe.Field()), fe.Value())
 	}
 	return "invalid validation error"
 }

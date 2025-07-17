@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/boldd/internal/config"
+	"github.com/boldd/internal/infrastructure/auth/jwt"
 	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/boldd/internal/infrastructure/persistence/redis"
 	"github.com/boldd/internal/infrastructure/validator"
@@ -17,6 +18,7 @@ type Service struct {
 	DB     *gorm.DB
 	Logger *zap.Logger
 	Redis  *goredis.Client
+	token  jwt.ITokenService
 }
 
 func NewServices(cfg *config.Config) *Service {
@@ -38,9 +40,13 @@ func NewServices(cfg *config.Config) *Service {
 	// register redis
 	redis := redis.NewRedisClient(&cfg.RedisConfig)
 
+	// register token service
+	jwt := jwt.NewTokenService(&cfg.JSWConfig)
+
 	return &Service{
 		DB:     db,
 		Logger: logger,
 		Redis:  redis,
+		token:  jwt,
 	}
 }

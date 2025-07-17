@@ -15,6 +15,7 @@ type Config struct {
 	RedisConfig       `mapstructure:"redis"`
 	CorsConfig        `mapstructure:"cors"`
 	AWSConfig         `mapstructure:"aws"`
+	JSWConfig         `mapstructure:"jwt"`
 }
 
 type ApplicationConfig struct {
@@ -46,6 +47,12 @@ type RedisConfig struct {
 
 type AWSConfig struct {
 	Credential string
+}
+
+type JSWConfig struct {
+	Key           string `mapstructure:"key"`
+	AccessExpiry  int    `mapstructure:"access_expiry"`
+	RefreshExpiry int    `mapstructure:"refresh_expiry"`
 }
 
 func Load(path string) (*Config, error) {

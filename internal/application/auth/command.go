@@ -1,6 +1,9 @@
 package auth
 
-import "github.com/boldd/internal/domain/user"
+import (
+	"github.com/boldd/internal/domain/user"
+	"github.com/boldd/pkgs/utils"
+)
 
 type IAuthCommandService interface {
 	Login()
@@ -22,7 +25,7 @@ func NewAuthCommandService(userRepository user.IUserRepository) *AuthCommandServ
 
 func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
 	// register user
-	newUser := user.NewUser(payload.FullName, payload.Email, payload.PhoneNumber, payload.Password)
+	newUser := user.NewUser(payload.FullName, payload.Email, payload.PhoneNumber, utils.HashPassword(payload.Password))
 	err := srv.userRepository.Create(newUser)
 	if err != nil {
 		return &AuthResponse{}, map[string]interface{}{"error": err, "code": 500}
