@@ -6,6 +6,13 @@ definitions:
       refresh_token:
         type: string
     type: object
+  auth.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
   auth.RegisterRequest:
     properties:
       email:
@@ -31,6 +38,28 @@ info:
     name: Daniel Ibok
     url: https://bigdann.vercel.com
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: '"Login user"'
+      parameters:
+      - description: User Login details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: body
+          schema:
+            $ref: '#/definitions/auth.AuthResponse'
+      summary: '"authorize a user"'
+      tags:
+      - Auth
   /auth/register:
     post:
       consumes:

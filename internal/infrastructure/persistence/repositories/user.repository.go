@@ -1,16 +1,21 @@
 package repositories
 
 import (
+	"errors"
 	"fmt"
 
+	"github.com/boldd/internal/domain/dtos"
 	"github.com/boldd/internal/domain/entities"
 	"gorm.io/gorm"
 )
 
 type IUserRepository interface {
 	Create(user *entities.User) error
-	Find(id int) (interface{}, error)
+	Find(id int) (dtos.UserResponse, error)
+	FindByEmail(email string) (dtos.UserResponse, error)
 	EmailExists(email string) bool
+	Roles(userID uint) ([]string, error)
+	Delete(id int) error
 	AssignRole(userID int, role string) error
 }
 
@@ -27,9 +32,15 @@ func (repo UserRepository) Create(user *entities.User) error {
 	return result.Error
 }
 
-func (repo UserRepository) Find(id int) (interface{}, error) {
-	var response interface{}
+func (repo UserRepository) Find(id int) (dtos.UserResponse, error) {
+	var response dtos.UserResponse
 	result := repo.db.Table("users").Where("id = ?", id).Scan(&response)
+	return response, result.Error
+}
+
+func (repo UserRepository) FindByEmail(email string) (dtos.UserResponse, error) {
+	var response dtos.UserResponse
+	result := repo.db.Table("users").Where("email = ?", email).Scan(&response)
 	return response, result.Error
 }
 
@@ -52,5 +63,19 @@ func (repo UserRepository) AssignRole(userID int, role string) error {
 	}
 
 	result := repo.db.Exec("INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)", userID, data.ID)
+	return result.Error
+}
+
+func (repo UserRepository) Roles(userID uint) ([]string, error) {
+	var roles []string
+	result := repo.db.Raw("select roles.name from users left join user_roles ON users.id = user_roles.user_id left join roles on user_roles.role_id = roles.id where users.id = ?", userID).Scan(&roles)
+	return roles, result.Error
+}
+
+func (repo UserRepository) Delete(id int) error {
+	result := repo.db.Table("users").Unscoped().Where("id = ?", id).Delete(&entities.User{})
+	if result.RowsAffected == 0 {
+		return errors.New("record not deleted")
+	}
 	return result.Error
 }

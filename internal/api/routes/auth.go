@@ -10,6 +10,7 @@ func (r Routes) authroutes() {
 	// register required services
 	command := auth.NewAuthCommandService(
 		repositories.NewUserRepository(r.services.DB),
+		repositories.NewOtpRepository(r.services.DB),
 		r.services.Token,
 		r.services.Logger,
 		r.services.Mail,

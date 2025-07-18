@@ -3,11 +3,11 @@ package entities
 import "time"
 
 type Otp struct {
-	UserID    uint
+	Email     string
 	Code      int
 	ExpiresAt time.Time
 }
 
-func NewOtp(userID uint, code int, expiresAt time.Time) *Otp {
-	return &Otp{userID, code, expiresAt}
+func NewOtp(email string, code int, expiresAt time.Time) *Otp {
+	return &Otp{email, code, expiresAt}
 }
