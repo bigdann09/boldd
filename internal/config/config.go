@@ -16,6 +16,7 @@ type Config struct {
 	CorsConfig        `mapstructure:"cors"`
 	AWSConfig         `mapstructure:"aws"`
 	JSWConfig         `mapstructure:"jwt"`
+	MailConfig        `mapstructure:"mail"`
 }
 
 type ApplicationConfig struct {
@@ -53,6 +54,14 @@ type JSWConfig struct {
 	Key           string `mapstructure:"key"`
 	AccessExpiry  int    `mapstructure:"access_expiry"`
 	RefreshExpiry int    `mapstructure:"refresh_expiry"`
+}
+
+type MailConfig struct {
+	From     string `mapstructure:"from"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
 }
 
 func Load(path string) (*Config, error) {

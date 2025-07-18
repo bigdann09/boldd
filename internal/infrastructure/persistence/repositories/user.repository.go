@@ -3,9 +3,16 @@ package repositories
 import (
 	"fmt"
 
-	"github.com/boldd/internal/domain/user"
+	"github.com/boldd/internal/domain/entities"
 	"gorm.io/gorm"
 )
+
+type IUserRepository interface {
+	Create(user *entities.User) error
+	Find(id int) (interface{}, error)
+	EmailExists(email string) bool
+	AssignRole(userID int, role string) error
+}
 
 type UserRepository struct {
 	db *gorm.DB
@@ -15,7 +22,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db}
 }
 
-func (repo UserRepository) Create(user *user.User) error {
+func (repo UserRepository) Create(user *entities.User) error {
 	result := repo.db.Table("users").Create(&user)
 	return result.Error
 }

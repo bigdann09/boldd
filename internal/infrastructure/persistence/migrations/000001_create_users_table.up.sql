@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(30) NOT NULL,
     phone_number TEXT NOT NULL,
     password TEXT NOT NULL,
+    email_verified bool NULL DEFAULT false,
     referral_token VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

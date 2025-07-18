@@ -1,7 +1,7 @@
 package seeder
 
 import (
-	"github.com/boldd/internal/domain/role"
+	"github.com/boldd/internal/domain/entities"
 	"github.com/boldd/internal/infrastructure/persistence/repositories"
 	"go.uber.org/zap"
 )
@@ -15,7 +15,7 @@ func (seeder *Seeder) roleSeeder() {
 		roles := []string{"customer", "admin", "merchant"}
 		for _, name := range roles {
 			seeder.logger.Info("adding role to database", zap.String("role", name))
-			roleRepository.Create(role.NewRole(name))
+			roleRepository.Create(entities.NewRole(name))
 		}
 	}
 	seeder.logger.Info("skipping seeding for roles")

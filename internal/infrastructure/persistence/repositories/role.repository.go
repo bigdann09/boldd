@@ -3,10 +3,19 @@ package repositories
 import (
 	"errors"
 
-	"github.com/boldd/internal/domain/role"
+	"github.com/boldd/internal/domain/dtos"
+	"github.com/boldd/internal/domain/entities"
 	"gorm.io/gorm"
 )
 
+type IRoleRepository interface {
+	Count() (int, error)
+	Create(role *entities.Role) error
+	RoleExists(name string) bool
+	Find(id int) (interface{}, error)
+	Update(uuid string, role *entities.Role) error
+	FindByName(name string) (dtos.RoleResponse, error)
+}
 type RoleRepository struct {
 	db *gorm.DB
 }
@@ -15,19 +24,19 @@ func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{db}
 }
 
-func (repo RoleRepository) Create(role *role.Role) error {
+func (repo RoleRepository) Create(role *entities.Role) error {
 	result := repo.db.Table("roles").Create(&role)
 	return result.Error
 }
 
-func (repo RoleRepository) Find(id int) (role.RoleResponse, error) {
-	var response role.RoleResponse
+func (repo RoleRepository) Find(id int) (dtos.RoleResponse, error) {
+	var response dtos.RoleResponse
 	result := repo.db.Table("roles").Where("id = ?", id).Scan(&response)
 	return response, result.Error
 }
 
-func (repo RoleRepository) FindByName(name string) (role.RoleResponse, error) {
-	var response role.RoleResponse
+func (repo RoleRepository) FindByName(name string) (dtos.RoleResponse, error) {
+	var response dtos.RoleResponse
 	result := repo.db.Table("roles").Where("name = ?", name).Scan(&response)
 	return response, result.Error
 }
@@ -38,7 +47,7 @@ func (repo RoleRepository) RoleExists(name string) bool {
 	return exists
 }
 
-func (repo RoleRepository) Update(uuid string, role *role.Role) error {
+func (repo RoleRepository) Update(uuid string, role *entities.Role) error {
 	result := repo.db.Table("roles").Where("uuid = ?", uuid).Updates(&role)
 	if result.RowsAffected == 0 {
 		return errors.New("role name not updated")

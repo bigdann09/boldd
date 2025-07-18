@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"github.com/boldd/internal/domain/user"
 	"github.com/boldd/internal/infrastructure/persistence/repositories"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -10,7 +9,7 @@ import (
 
 type Validator struct {
 	validator      *validator.Validate
-	userRepository user.IUserRepository
+	userRepository repositories.IUserRepository
 }
 
 func NewValidator(db *gorm.DB) *Validator {

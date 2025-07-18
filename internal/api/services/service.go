@@ -5,6 +5,7 @@ import (
 
 	"github.com/boldd/internal/config"
 	"github.com/boldd/internal/infrastructure/auth/jwt"
+	"github.com/boldd/internal/infrastructure/mail"
 	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/boldd/internal/infrastructure/persistence/redis"
 	seeder "github.com/boldd/internal/infrastructure/persistence/seeders"
@@ -20,6 +21,7 @@ type Service struct {
 	Logger *zap.Logger
 	Redis  *goredis.Client
 	Token  jwt.ITokenService
+	Mail   mail.IMail
 }
 
 func NewServices(cfg *config.Config) *Service {
@@ -48,10 +50,14 @@ func NewServices(cfg *config.Config) *Service {
 	seeder := seeder.NewSeeder(db, logger)
 	seeder.Run()
 
+	// register mail
+	mail := mail.NewMail("dann@gmail.com", "", "", "localhost", 1025)
+
 	return &Service{
 		DB:     db,
 		Logger: logger,
 		Redis:  redis,
 		Token:  jwt,
+		Mail:   mail,
 	}
 }

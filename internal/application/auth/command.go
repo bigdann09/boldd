@@ -1,8 +1,10 @@
 package auth
 
 import (
-	"github.com/boldd/internal/domain/user"
+	"github.com/boldd/internal/domain/entities"
 	"github.com/boldd/internal/infrastructure/auth/jwt"
+	"github.com/boldd/internal/infrastructure/mail"
+	"github.com/boldd/internal/infrastructure/persistence/repositories"
 	"github.com/boldd/pkgs/utils"
 	"go.uber.org/zap"
 )
@@ -18,18 +20,19 @@ type IAuthCommandService interface {
 }
 
 type AuthCommandService struct {
-	userRepository user.IUserRepository
+	userRepository repositories.IUserRepository
 	tokensrv       jwt.ITokenService
 	logger         *zap.Logger
+	mailer         mail.IMail
 }
 
-func NewAuthCommandService(userRepository user.IUserRepository, tokensrv jwt.ITokenService, logger *zap.Logger) *AuthCommandService {
-	return &AuthCommandService{userRepository, tokensrv, logger}
+func NewAuthCommandService(userRepository repositories.IUserRepository, tokensrv jwt.ITokenService, logger *zap.Logger, mailer mail.IMail) *AuthCommandService {
+	return &AuthCommandService{userRepository, tokensrv, logger, mailer}
 }
 
 func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
 	srv.logger.Info("adding new user to database")
-	newUser := user.NewUser(
+	newUser := entities.NewUser(
 		payload.FullName,
 		payload.Email,
 		payload.PhoneNumber,
@@ -48,7 +51,13 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		return &AuthResponse{}, map[string]interface{}{"error": "there was an error creating user account", "code": 500}
 	}
 
-	// TODO: send mail
+	srv.logger.Info("sending registration email to user")
+	if err := srv.mailer.To(newUser.Email).Subject("Registration Complete").
+		Body(mail.NewRegistrationMail(newUser.Fullname, utils.GenerateOTP())).
+		Send(); err != nil {
+		srv.logger.Error("error sending email to user", zap.Error(err))
+		return &AuthResponse{}, map[string]interface{}{"error": "there was an error creating user account", "code": 500}
+	}
 
 	return &AuthResponse{
 		AccessToken:  srv.tokensrv.GenerateAccessToken(int(newUser.ID), "customer"),
