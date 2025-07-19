@@ -13,6 +13,7 @@ type IUserRepository interface {
 	Create(user *entities.User) error
 	Find(id int) (dtos.UserResponse, error)
 	FindByEmail(email string) (dtos.UserResponse, error)
+	Update(id uint, user *entities.User) error
 	EmailExists(email string) bool
 	Roles(userID uint) ([]string, error)
 	Delete(id int) error
@@ -42,6 +43,11 @@ func (repo UserRepository) FindByEmail(email string) (dtos.UserResponse, error) 
 	var response dtos.UserResponse
 	result := repo.db.Table("users").Where("email = ?", email).Scan(&response)
 	return response, result.Error
+}
+
+func (repo UserRepository) Update(id uint, user *entities.User) error {
+	result := repo.db.Table("users").Where("id = ?", id).Updates(user)
+	return result.Error
 }
 
 func (repo UserRepository) EmailExists(email string) bool {

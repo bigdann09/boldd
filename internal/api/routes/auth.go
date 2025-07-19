@@ -11,6 +11,7 @@ func (r Routes) authroutes() {
 	command := auth.NewAuthCommandService(
 		repositories.NewUserRepository(r.services.DB),
 		repositories.NewOtpRepository(r.services.DB),
+		repositories.NewUserAddressRepository(r.services.DB),
 		r.services.Token,
 		r.services.Logger,
 		r.services.Mail,
@@ -24,5 +25,10 @@ func (r Routes) authroutes() {
 	{
 		auth.POST("/login", ctrl.Login)
 		auth.POST("/register", ctrl.Register)
+		auth.POST("/verify-email", ctrl.VerifyEmail)
+		auth.POST("/refresh-token", ctrl.RefreshToken)
+		auth.POST("/reset-password", ctrl.ResetPassword)
+		auth.POST("/forgot-password", ctrl.ForgotPassword)
+		auth.POST("/resend-confirmation-email", ctrl.ResendConfirmationEmail)
 	}
 }

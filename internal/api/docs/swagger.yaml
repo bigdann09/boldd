@@ -1,4 +1,20 @@
 definitions:
+  auth.Address:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zip_code:
+        type: string
+    required:
+    - address
+    - city
+    - state
+    - zip_code
+    type: object
   auth.AuthResponse:
     properties:
       access_token:
@@ -12,9 +28,23 @@ definitions:
         type: string
       password:
         type: string
+    required:
+    - email
+    - password
+    type: object
+  auth.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
     type: object
   auth.RegisterRequest:
     properties:
+      addresses:
+        items:
+          $ref: '#/definitions/auth.Address'
+        type: array
       email:
         type: string
       fullname:
@@ -27,10 +57,57 @@ definitions:
       phone_number:
         type: string
     required:
+    - addresses
     - email
     - fullname
     - password
     - phone_number
+    type: object
+  auth.ResendEmailRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  auth.ResetPasswordRequest:
+    properties:
+      code:
+        minLength: 6
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - code
+    - email
+    - password
+    type: object
+  auth.VerifyEmailRequest:
+    properties:
+      code:
+        minLength: 6
+        type: string
+      email:
+        type: string
+    required:
+    - code
+    - email
+    type: object
+  categories.CreateCategoryRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dtos.ErrorResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
     type: object
 info:
   contact:
@@ -38,6 +115,32 @@ info:
     name: Daniel Ibok
     url: https://bigdann.vercel.com
 paths:
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: '"forgot password request"'
+      parameters:
+      - description: forgot password email payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResendEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"forgot password"'
+      tags:
+      - Auth
   /auth/login:
     post:
       consumes:
@@ -57,7 +160,41 @@ paths:
           description: body
           schema:
             $ref: '#/definitions/auth.AuthResponse'
+        "400":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"authorize a user"'
+      tags:
+      - Auth
+  /auth/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: '"Refresh user access token"'
+      parameters:
+      - description: User registration details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: body
+          schema:
+            $ref: '#/definitions/auth.AuthResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"refresh token"'
       tags:
       - Auth
   /auth/register:
@@ -79,7 +216,146 @@ paths:
           description: body
           schema:
             $ref: '#/definitions/auth.AuthResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"register user"'
       tags:
       - Auth
+  /auth/resend-confirmation-email:
+    post:
+      consumes:
+      - application/json
+      description: '"Resend confirmation email to user"'
+      parameters:
+      - description: resend confirmation email payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResendEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"resend confirmation email"'
+      tags:
+      - Auth
+  /auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: '"reset password request"'
+      parameters:
+      - description: forgot password email payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"reset password"'
+      tags:
+      - Auth
+  /auth/verify-email:
+    post:
+      consumes:
+      - application/json
+      description: '"Verify a user email address"'
+      parameters:
+      - description: verify email payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.VerifyEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"verify user email"'
+      tags:
+      - Auth
+  /categories/:
+    get:
+      consumes:
+      - application/json
+      description: '"product categories"'
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page data size
+        in: query
+        name: page_size
+        type: integer
+      - description: sort by
+        in: query
+        name: sort_by
+        type: string
+      - description: order
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"product categories"'
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: '"product categories"'
+      parameters:
+      - description: Create category payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categories.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"product categories"'
+      tags:
+      - Category
 swagger: "2.0"

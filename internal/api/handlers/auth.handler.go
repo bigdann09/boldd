@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/boldd/internal/application/auth"
+	"github.com/boldd/internal/domain/dtos"
 	"github.com/boldd/internal/infrastructure/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -27,6 +28,7 @@ func NewAuthController(authsrv auth.IAuthCommandService) *AuthController {
 // @Schemes
 // @Param		payload	body		auth.RegisterRequest	true	"User registration details"
 // @Success	200		{object}	auth.AuthResponse		"body"
+// @Failure	500		{object}	dtos.ErrorResponse		"body"
 // @Router		/auth/register [post]
 func (ctrl AuthController) Register(c *gin.Context) {
 	var payload auth.RegisterRequest
@@ -38,8 +40,10 @@ func (ctrl AuthController) Register(c *gin.Context) {
 	response, err := ctrl.authsrv.Register(&payload)
 	if err != nil {
 		body := err.(map[string]interface{})
-		c.JSON(body["code"].(int), gin.H{
-			"message": body["error"],
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
 		})
 		return
 	}
@@ -58,7 +62,9 @@ func (ctrl AuthController) Register(c *gin.Context) {
 // @Produce		json
 // @Schemes
 // @Param		payload	body		auth.LoginRequest	true	"User Login details"
-// @Success	200		{object}	auth.AuthResponse		"body"
+// @Success	200		{object}	auth.AuthResponse	"body"
+// @Failure	400		{object}	dtos.ErrorResponse	"body"
+// @Failure	500		{object}	dtos.ErrorResponse	"body"
 // @Router		/auth/login [post]
 func (ctrl AuthController) Login(c *gin.Context) {
 	var payload auth.LoginRequest
@@ -70,17 +76,173 @@ func (ctrl AuthController) Login(c *gin.Context) {
 	response, err := ctrl.authsrv.Login(&payload)
 	if err != nil {
 		body := err.(map[string]interface{})
-		c.JSON(body["code"].(int), gin.H{
-			"message": body["error"],
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, response)
 }
-func (ctrl AuthController) Logout(c *gin.Context)                  {}
-func (ctrl AuthController) ForgotPassword(c *gin.Context)          {}
-func (ctrl AuthController) ResetPassword(c *gin.Context)           {}
-func (ctrl AuthController) ResendConfirmationEmail(c *gin.Context) {}
-func (ctrl AuthController) VerifyEmail(c *gin.Context)             {}
-func (ctrl AuthController) GoogleLogin(c *gin.Context)             {}
+
+// @Summary		"refresh token"
+// @Description	"Refresh user access token"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		auth.RefreshTokenRequest	true	"User registration details"
+// @Success	200		{object}	auth.AuthResponse			"body"
+// @Failure	500		{object}	dtos.ErrorResponse			"body"
+// @Router		/auth/refresh-token [post]
+func (ctrl AuthController) RefreshToken(c *gin.Context) {
+	var payload auth.RefreshTokenRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
+
+	response, err := ctrl.authsrv.RefreshToken(&payload)
+	if err != nil {
+		body := err.(map[string]interface{})
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+// @Summary		"reset password"
+// @Description	"reset password request"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		auth.ResetPasswordRequest	true	"forgot password email payload"
+// @Failure	404		{object}	dtos.ErrorResponse			"body"
+// @Failure	500		{object}	dtos.ErrorResponse			"body"
+// @Router		/auth/reset-password [post]
+func (ctrl AuthController) ResetPassword(c *gin.Context) {
+	var payload auth.ResetPasswordRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
+
+	err := ctrl.authsrv.ResetPassword(&payload)
+	if err != nil {
+		body := err.(map[string]interface{})
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.ErrorResponse{})
+}
+
+// @Summary		"forgot password"
+// @Description	"forgot password request"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		auth.ResendEmailRequest	true	"forgot password email payload"
+// @Failure	404		{object}	dtos.ErrorResponse		"body"
+// @Failure	500		{object}	dtos.ErrorResponse		"body"
+// @Router		/auth/forgot-password [post]
+func (ctrl AuthController) ForgotPassword(c *gin.Context) {
+	var payload auth.ResendEmailRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
+
+	err := ctrl.authsrv.ForgotPassword(&payload)
+	if err != nil {
+		body := err.(map[string]interface{})
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+// @Summary		"resend confirmation email"
+// @Description	"Resend confirmation email to user"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		auth.ResendEmailRequest	true	"resend confirmation email payload"
+// @Failure	404		{object}	dtos.ErrorResponse		"body"
+// @Failure	500		{object}	dtos.ErrorResponse		"body"
+// @Router		/auth/resend-confirmation-email [post]
+func (ctrl AuthController) ResendConfirmationEmail(c *gin.Context) {
+	var payload auth.ResendEmailRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
+
+	err := ctrl.authsrv.ResendConfirmEmail(&payload)
+	if err != nil {
+		body := err.(map[string]interface{})
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+// @Summary		"verify user email"
+// @Description	"Verify a user email address"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		auth.VerifyEmailRequest	true	"verify email payload"
+// @Failure	400		{object}	dtos.ErrorResponse		"body"
+// @Failure	404		{object}	dtos.ErrorResponse		"body"
+// @Failure	500		{object}	dtos.ErrorResponse		"body"
+// @Router		/auth/verify-email [post]
+func (ctrl AuthController) VerifyEmail(c *gin.Context) {
+	var payload auth.VerifyEmailRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
+
+	err := ctrl.authsrv.VerifyEmail(&payload)
+	if err != nil {
+		body := err.(map[string]interface{})
+		code := body["code"].(int)
+		c.JSON(code, dtos.ErrorResponse{
+			Message: body["error"].(string),
+			Status:  code,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+func (ctrl AuthController) GoogleLogin(c *gin.Context) {}
+
+func (ctrl AuthController) Logout(c *gin.Context) {}

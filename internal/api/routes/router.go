@@ -19,5 +19,6 @@ func (router *Routes) SetupRoutes() *gin.Engine {
 	router.healthroute()
 	router.metricsroute()
 	router.swaggerroutes()
+	router.categoryroutes()
 	return router.engine
 }

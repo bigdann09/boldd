@@ -10,7 +10,9 @@ import (
 type IOtpRepository interface {
 	Create(otp *entities.Otp) error
 	Find(email string) (entities.Otp, error)
-	Delete(id int) error
+	Exists(email string) bool
+	Delete(uuid string) error
+	DeleteByEmail(email string) error
 }
 type OtpRepository struct {
 	db *gorm.DB
@@ -31,8 +33,22 @@ func (repo OtpRepository) Find(email string) (entities.Otp, error) {
 	return response, result.Error
 }
 
-func (repo OtpRepository) Delete(id int) error {
-	result := repo.db.Table("otp").Unscoped().Where("id = ?", id).Delete(&entities.Otp{})
+func (repo OtpRepository) Exists(email string) bool {
+	var exists bool
+	repo.db.Raw("select exists (select 1 from users where email = ?)", email).Scan(&exists)
+	return exists
+}
+
+func (repo OtpRepository) Delete(uuid string) error {
+	result := repo.db.Table("otp").Unscoped().Where("uuid = ?", uuid).Delete(&entities.Otp{})
+	if result.RowsAffected == 0 {
+		return errors.New("record not deleted")
+	}
+	return result.Error
+}
+
+func (repo OtpRepository) DeleteByEmail(email string) error {
+	result := repo.db.Table("otp").Unscoped().Where("email = ?", email).Delete(&entities.Otp{})
 	if result.RowsAffected == 0 {
 		return errors.New("record not deleted")
 	}
