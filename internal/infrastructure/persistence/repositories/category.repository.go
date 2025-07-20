@@ -13,6 +13,7 @@ import (
 type ICategoryRepository interface {
 	Delete(uuid string) error
 	CategoryExists(name string) bool
+	CategoryExistsByID(id uint) bool
 	CategoryExistsByUUID(uuid string) bool
 	Create(address *entities.Category) error
 	Find(uuid string) (*dtos.CategoryResponse, error)
@@ -61,6 +62,12 @@ func (repo CategoryRepository) CategoryExists(name string) bool {
 func (repo CategoryRepository) CategoryExistsByUUID(uuid string) bool {
 	var exists bool
 	repo.db.Raw("select exists (select 1 from categories where uuid = ?)", uuid).Scan(&exists)
+	return exists
+}
+
+func (repo CategoryRepository) CategoryExistsByID(id uint) bool {
+	var exists bool
+	repo.db.Raw("select exists (select 1 from categories where id = ?)", id).Scan(&exists)
 	return exists
 }
 

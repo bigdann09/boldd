@@ -79,7 +79,7 @@ func (cmd CategoryCommand) Update(uuid string, payload *UpdateCategoryRequest) i
 	}
 
 	cmd.logger.Info("updating category record", zap.String("uuid", uuid))
-	err := cmd.categoryRepository.Update(uuid, &entities.Category{Name: payload.Name})
+	err := cmd.categoryRepository.Update(uuid, entities.UpdateCategory(payload.Name))
 	if err != nil {
 		cmd.logger.Error("could not update category record", zap.Error(err))
 		return dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}

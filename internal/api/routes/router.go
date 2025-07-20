@@ -20,5 +20,6 @@ func (router *Routes) SetupRoutes() *gin.Engine {
 	router.metricsroute()
 	router.swaggerroutes()
 	router.categoryroutes()
+	router.subcategoryroutes()
 	return router.engine
 }

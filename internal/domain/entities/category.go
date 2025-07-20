@@ -17,3 +17,7 @@ func NewCategory(name string) *Category {
 		Name: name,
 	}
 }
+
+func UpdateCategory(name string) *Category {
+	return &Category{Name: name}
+}
