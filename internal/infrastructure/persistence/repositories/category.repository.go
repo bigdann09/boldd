@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/boldd/internal/domain/dtos"
 	"github.com/boldd/internal/domain/entities"
@@ -28,6 +29,14 @@ func (repo CategoryRepository) Create(address *entities.Category) error {
 }
 
 func (repo CategoryRepository) FindAllPaginated(filter *dtos.CategoryQueryFilter) (utils.PaginationResponse[dtos.CategoryResponse], error) {
+	if strings.EqualFold(filter.SortBy, "") {
+		filter.SortBy = "name"
+	}
+
+	if strings.EqualFold(filter.Order, "") {
+		filter.Order = "asc"
+	}
+
 	query := repo.db.Table("categories").Order(fmt.Sprintf("%s %s", filter.SortBy, filter.Order))
 	return utils.NewPaginationResponse[dtos.CategoryResponse](filter.Page, filter.PageSize, query)
 }

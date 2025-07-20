@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/go-redis/cache/v9"
@@ -49,8 +50,11 @@ func (c *Cache[T]) SetArray(key string, values []T) error {
 func (c *Cache[T]) Get(key string) (T, error) {
 	var value T
 	err := c.cache.Get(c.context, key, &value)
-	if err != cache.ErrCacheMiss {
-		return value, cache.ErrCacheMiss
+	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return value, nil
+		}
+		return value, err
 	}
 	if err != nil {
 		return value, err
@@ -62,8 +66,11 @@ func (c *Cache[T]) Get(key string) (T, error) {
 func (c *Cache[T]) GetArray(key string) ([]T, error) {
 	var values []T
 	err := c.cache.Get(c.context, key, &values)
-	if err != cache.ErrCacheMiss {
-		return values, cache.ErrCacheMiss
+	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return values, nil
+		}
+		return values, err
 	}
 	if err != nil {
 		return values, err
@@ -77,19 +84,27 @@ func (c *Cache[T]) Delete(key string) error {
 }
 
 // retrieves or stores a value in cache
-func (c *Cache[T]) GetOrSet(key string, value T) (T, error) {
-	exists := c.cache.Exists(c.context, key)
-	if exists {
-		return c.Get(key)
+func (c *Cache[T]) GetOrSet(key string, fn func() (T, error)) (T, error) {
+	cached, err := c.Get(key)
+	if err == nil {
+		return cached, nil
+	}
+	value, err := fn()
+	if err != nil {
+		return value, err
 	}
 	return value, c.Set(key, value)
 }
 
 // retrieves or stores an array of values in cache
-func (c *Cache[T]) GetOrSetArray(key string, value []T) ([]T, error) {
-	exists := c.cache.Exists(c.context, key)
-	if exists {
-		return c.GetArray(key)
+func (c *Cache[T]) GetOrSetArray(key string, fn func() ([]T, error)) ([]T, error) {
+	cached, err := c.GetArray(key)
+	if err == nil {
+		return cached, nil
+	}
+	value, err := fn()
+	if err != nil {
+		return value, err
 	}
 	return value, c.SetArray(key, value)
 }

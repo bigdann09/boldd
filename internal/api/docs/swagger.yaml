@@ -309,7 +309,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: '"product categories"'
+      description: '"get all product categories"'
       parameters:
       - description: page number
         in: query
@@ -334,7 +334,7 @@ paths:
           description: body
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
-      summary: '"product categories"'
+      summary: '"get all categories"'
       tags:
       - Category
     post:

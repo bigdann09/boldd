@@ -313,7 +313,7 @@ const docTemplate = `{
         },
         "/categories/": {
             "get": {
-                "description": "\"product categories\"",
+                "description": "\"get all product categories\"",
                 "consumes": [
                     "application/json"
                 ],
@@ -323,7 +323,7 @@ const docTemplate = `{
                 "tags": [
                     "Category"
                 ],
-                "summary": "\"product categories\"",
+                "summary": "\"get all categories\"",
                 "parameters": [
                     {
                         "type": "integer",

@@ -302,7 +302,7 @@
         },
         "/categories/": {
             "get": {
-                "description": "\"product categories\"",
+                "description": "\"get all product categories\"",
                 "consumes": [
                     "application/json"
                 ],
@@ -312,7 +312,7 @@
                 "tags": [
                     "Category"
                 ],
-                "summary": "\"product categories\"",
+                "summary": "\"get all categories\"",
                 "parameters": [
                     {
                         "type": "integer",
