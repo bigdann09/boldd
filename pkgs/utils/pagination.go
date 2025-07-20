@@ -15,6 +15,10 @@ type PaginationResponse[Entity any] struct {
 func NewPaginationResponse[Entity any](page, limit int, db *gorm.DB) (PaginationResponse[Entity], error) {
 	var response []Entity
 
+	if limit == 0 {
+		limit = 10
+	}
+
 	var total int64
 	clone := db.Session(&gorm.Session{})
 	clone.Count(&total)

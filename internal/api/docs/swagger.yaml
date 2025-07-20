@@ -102,6 +102,20 @@ definitions:
     required:
     - name
     type: object
+  categories.UpdateCategoryRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dtos.CategoryResponse:
+    properties:
+      name:
+        type: string
+      uuid:
+        type: string
+    type: object
   dtos.ErrorResponse:
     properties:
       message:
@@ -351,11 +365,96 @@ paths:
       produces:
       - application/json
       responses:
+        "201":
+          description: "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
         "500":
           description: body
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"product categories"'
+      tags:
+      - Category
+  /categories/{uuid}:
+    delete:
+      consumes:
+      - application/json
+      description: '"retrieve a single category from database"'
+      parameters:
+      - description: category uuid
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get a single category"'
+      tags:
+      - Category
+    get:
+      consumes:
+      - application/json
+      description: '"retrieve a single category from database"'
+      parameters:
+      - description: category uuid
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: category
+          schema:
+            $ref: '#/definitions/dtos.CategoryResponse'
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get a single category"'
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: '"update a single category in the database"'
+      parameters:
+      - description: category uuid
+        in: path
+        name: uuid
+        required: true
+        type: string
+      - description: category uuid
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categories.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"update a single category"'
       tags:
       - Category
 swagger: "2.0"

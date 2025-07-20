@@ -39,12 +39,8 @@ func (ctrl AuthController) Register(c *gin.Context) {
 
 	response, err := ctrl.authsrv.Register(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
@@ -75,12 +71,8 @@ func (ctrl AuthController) Login(c *gin.Context) {
 
 	response, err := ctrl.authsrv.Login(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
@@ -106,12 +98,8 @@ func (ctrl AuthController) RefreshToken(c *gin.Context) {
 
 	response, err := ctrl.authsrv.RefreshToken(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
@@ -137,16 +125,12 @@ func (ctrl AuthController) ResetPassword(c *gin.Context) {
 
 	err := ctrl.authsrv.ResetPassword(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
-	c.JSON(http.StatusOK, dtos.ErrorResponse{})
+	c.JSON(http.StatusOK, nil)
 }
 
 // @Summary		"forgot password"
@@ -168,16 +152,12 @@ func (ctrl AuthController) ForgotPassword(c *gin.Context) {
 
 	err := ctrl.authsrv.ForgotPassword(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, nil)
 }
 
 // @Summary		"resend confirmation email"
@@ -199,16 +179,12 @@ func (ctrl AuthController) ResendConfirmationEmail(c *gin.Context) {
 
 	err := ctrl.authsrv.ResendConfirmEmail(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, nil)
 }
 
 // @Summary		"verify user email"
@@ -231,16 +207,12 @@ func (ctrl AuthController) VerifyEmail(c *gin.Context) {
 
 	err := ctrl.authsrv.VerifyEmail(&payload)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, nil)
 }
 
 func (ctrl AuthController) GoogleLogin(c *gin.Context) {}

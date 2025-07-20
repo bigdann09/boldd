@@ -12,20 +12,24 @@ import (
 )
 
 type ICategoryQuery interface {
+	Get(uuid string) (*dtos.CategoryResponse, interface{})
+	GetAll(filter *dtos.CategoryQueryFilter) (utils.PaginationResponse[dtos.CategoryResponse], interface{})
 }
 
 type CategoryQuery struct {
 	logger             *zap.Logger
 	categoryRepository repositories.ICategoryRepository
+	categoryCache      *cache.Cache[*dtos.CategoryResponse]
 	categoryAllCache   *cache.Cache[utils.PaginationResponse[dtos.CategoryResponse]]
 }
 
 func NewCategoryQuery(
 	logger *zap.Logger,
 	categoryRepository repositories.ICategoryRepository,
+	categoryCache *cache.Cache[*dtos.CategoryResponse],
 	categoryAllCache *cache.Cache[utils.PaginationResponse[dtos.CategoryResponse]],
 ) *CategoryQuery {
-	return &CategoryQuery{logger, categoryRepository, categoryAllCache}
+	return &CategoryQuery{logger, categoryRepository, categoryCache, categoryAllCache}
 }
 
 func (qry *CategoryQuery) GetAll(filter *dtos.CategoryQueryFilter) (utils.PaginationResponse[dtos.CategoryResponse], interface{}) {
@@ -46,8 +50,24 @@ func (qry *CategoryQuery) GetAll(filter *dtos.CategoryQueryFilter) (utils.Pagina
 	)
 	if err != nil {
 		qry.logger.Error("error retrieving categories from cache", zap.Error(err))
-		return utils.PaginationResponse[dtos.CategoryResponse]{}, map[string]interface{}{"error": "could not fetch categories", "code": http.StatusInternalServerError}
+		return utils.PaginationResponse[dtos.CategoryResponse]{}, dtos.ErrorResponse{Message: "could not fetch categories", Status: http.StatusInternalServerError}
+	}
+	return categories, nil
+}
+
+func (qry *CategoryQuery) Get(uuid string) (*dtos.CategoryResponse, interface{}) {
+	key := fmt.Sprintf("categories_%s", uuid)
+	qry.logger.Info("retrieving from cache if data exists else setting to cache")
+	category, err := qry.categoryCache.GetOrSet(
+		key,
+		func() (*dtos.CategoryResponse, error) {
+			return qry.categoryRepository.Find(uuid)
+		},
+	)
+	if err != nil {
+		qry.logger.Error("error retrieving categories from cache", zap.Error(err))
+		return &dtos.CategoryResponse{}, dtos.ErrorResponse{Message: "could not fetch categories", Status: http.StatusInternalServerError}
 	}
 
-	return categories, nil
+	return category, nil
 }

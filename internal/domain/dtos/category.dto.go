@@ -6,8 +6,8 @@ type CategoryResponse struct {
 }
 
 type CategoryQueryFilter struct {
-	Page     int    `json:"page" binding:"number,isdefault=1"`
-	PageSize int    `json:"page_size" binding:"number,isdefault=10"`
-	SortBy   string `json:"sort_by" binding:""`
-	Order    string `json:"order" binding:""`
+	Page     int    `form:"page" binding:"number"`
+	PageSize int    `form:"page_size" binding:"number"`
+	SortBy   string `form:"sort_by" binding:""`
+	Order    string `form:"order" binding:""`
 }

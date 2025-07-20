@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/boldd/internal/application/categories"
 	"github.com/boldd/internal/domain/dtos"
@@ -10,11 +11,12 @@ import (
 )
 
 type CategoryController struct {
-	query *categories.CategoryQuery
+	query   categories.ICategoryQuery
+	command categories.ICategoryCommand
 }
 
-func NewCategoryController(query *categories.CategoryQuery) *CategoryController {
-	return &CategoryController{query}
+func NewCategoryController(query categories.ICategoryQuery, command categories.ICategoryCommand) *CategoryController {
+	return &CategoryController{query, command}
 }
 
 // @Summary		"get all categories"
@@ -38,20 +40,39 @@ func (ctrl CategoryController) Index(c *gin.Context) {
 
 	response, err := ctrl.query.GetAll(&filter)
 	if err != nil {
-		body := err.(map[string]interface{})
-		code := body["code"].(int)
-		c.JSON(code, dtos.ErrorResponse{
-			Message: body["error"].(string),
-			Status:  code,
-		})
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
 		return
 	}
 
 	c.JSON(http.StatusOK, response)
 }
 
+// @Summary		"get a single category"
+// @Description	"retrieve a single category from database"
+// @Tags			Category
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		uuid		path		string					true	"category uuid"
+// @Success 200 	{object}	dtos.CategoryResponse									"category"
+// @Failure	404		{object}	dtos.ErrorResponse					"body"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/categories/{uuid} [get]
 func (ctrl CategoryController) Show(c *gin.Context) {
+	uuid := c.Param("uuid")
+	if strings.EqualFold(uuid, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	}
 
+	response, err := ctrl.query.Get(uuid)
+	if err != nil {
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 // @Summary		"product categories"
@@ -61,16 +82,81 @@ func (ctrl CategoryController) Show(c *gin.Context) {
 // @Produce		json
 // @Schemes
 // @Param		payload	body		categories.CreateCategoryRequest	true	"Create category payload"
+// @Success 201		""			""									"no response"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
 // @Router		/categories/ [post]
 func (ctrl CategoryController) Store(c *gin.Context) {
+	var payload categories.CreateCategoryRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
 
+	err := ctrl.command.Create(&payload)
+	if err != nil {
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
+		return
+	}
+
+	c.JSON(http.StatusCreated, nil)
 }
 
+// @Summary		"update a single category"
+// @Description	"update a single category in the database"
+// @Tags			Category
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		uuid		path		string					true	"category uuid"
+// @Param		payload		body		categories.UpdateCategoryRequest		true	"category uuid"
+// @Failure	404		{object}	dtos.ErrorResponse					"body"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/categories/{uuid} [put]
 func (ctrl CategoryController) Update(c *gin.Context) {
+	uuid := c.Param("uuid")
+	if strings.EqualFold(uuid, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	}
 
+	var payload categories.UpdateCategoryRequest
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		validator.GetErrors(c, err)
+		return
+	}
+
+	err := ctrl.command.Update(uuid, &payload)
+	if err != nil {
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
 }
 
+// @Summary		"get a single category"
+// @Description	"retrieve a single category from database"
+// @Tags			Category
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		uuid		path		string					true	"category uuid"
+// @Failure	404		{object}	dtos.ErrorResponse					"body"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/categories/{uuid} [delete]
 func (ctrl CategoryController) Delete(c *gin.Context) {
+	uuid := c.Param("uuid")
+	if strings.EqualFold(uuid, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	}
 
+	err := ctrl.command.Delete(uuid)
+	if err != nil {
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
 }

@@ -58,7 +58,7 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 	err := srv.userRepository.Create(newUser)
 	if err != nil {
 		srv.logger.Error("there was an error adding user", zap.Error(err))
-		return &AuthResponse{}, map[string]interface{}{"error": err, "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("storing user addresses")
@@ -77,14 +77,14 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		srv.logger.Info("deleting new user record")
 		srv.userRepository.Delete(int(newUser.ID))
 		srv.logger.Error("error assigning role to user", zap.Error(err))
-		return &AuthResponse{}, map[string]interface{}{"error": "there was an error creating user account", "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
 	otpCode := utils.GenerateOTP()
 	srv.logger.Info("store user otp for email verification")
 	if err := srv.otpRepository.Create(entities.NewOtp(newUser.Email, otpCode, time.Now().Add(time.Minute*5))); err != nil {
 		srv.logger.Error("error storing email code for user", zap.Error(err))
-		return &AuthResponse{}, map[string]interface{}{"error": "there was an error creating user account", "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("sending registration email to user")
@@ -92,7 +92,7 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		Body(mail.NewRegistrationMail(newUser.Fullname, otpCode)).
 		Send(); err != nil {
 		srv.logger.Error("error sending email to user", zap.Error(err))
-		return &AuthResponse{}, map[string]interface{}{"error": "there was an error creating user account", "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
 	return &AuthResponse{
@@ -106,31 +106,31 @@ func (srv *AuthCommandService) Login(payload *LoginRequest) (*AuthResponse, inte
 	user, err := srv.userRepository.FindByEmail(payload.Email)
 	if err != nil {
 		srv.logger.Error("encountered an error retrieve user information", zap.Error(err))
-		return &AuthResponse{}, map[string]interface{}{"error": "could not retrieve user data", "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "could not retrieve user data", Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("checking if record exists")
 	if reflect.DeepEqual(user, &dtos.UserResponse{}) {
 		srv.logger.Warn("user record not found", zap.String("email", payload.Email))
-		return &AuthResponse{}, map[string]interface{}{"error": "invalid login credentials", "code": http.StatusBadRequest}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "invalid login credentials", Status: http.StatusBadRequest}
 	}
 
 	srv.logger.Info("validate password if email matches or record was found")
 	if err := utils.ComparePasswords(user.Password, payload.Password); err != nil {
 		srv.logger.Warn("user password was incorrect", zap.String("email", payload.Email))
-		return &AuthResponse{}, map[string]interface{}{"error": "invalid login credentials", "code": http.StatusBadRequest}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "invalid login credentials", Status: http.StatusBadRequest}
 	}
 
 	srv.logger.Info("check if email is verified")
 	if !user.EmailVerified {
 		srv.logger.Warn("user email not verified", zap.String("email", payload.Email))
-		return &AuthResponse{}, map[string]interface{}{"error": "email address not verified", "code": http.StatusBadRequest}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "email address not verified", Status: http.StatusBadRequest}
 	}
 
 	roles, err := srv.userRepository.Roles(user.ID)
 	if err != nil {
 		srv.logger.Error("could not retrieve user roles")
-		return &AuthResponse{}, map[string]interface{}{"error": "error authenticating user", "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "error authenticating user", Status: http.StatusInternalServerError}
 	}
 
 	return &AuthResponse{
@@ -143,7 +143,7 @@ func (srv *AuthCommandService) RefreshToken(payload *RefreshTokenRequest) (*Auth
 	// TODO: check if refresh token is still valid
 	claims, err := srv.tokensrv.ValidateToken(payload.RefreshToken)
 	if err != nil {
-		return &AuthResponse{}, map[string]interface{}{"error": "refresh token expired", "code": http.StatusInternalServerError}
+		return &AuthResponse{}, dtos.ErrorResponse{Message: "refresh token expired", Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("retrieve user roles from claims")
@@ -163,7 +163,7 @@ func (srv *AuthCommandService) ForgotPassword(payload *ResendEmailRequest) inter
 	srv.logger.Info("checking if email address is registered")
 	if exists := srv.userRepository.EmailExists(payload.Email); !exists {
 		srv.logger.Warn("user record not found", zap.String("email", payload.Email))
-		return map[string]interface{}{"error": "invalid email address", "code": http.StatusNotFound}
+		return dtos.ErrorResponse{Message: "invalid email address", Status: http.StatusNotFound}
 	}
 
 	srv.logger.Info("check if otp ecord exists for email", zap.String("email", payload.Email))
@@ -177,13 +177,13 @@ func (srv *AuthCommandService) ForgotPassword(payload *ResendEmailRequest) inter
 	err := srv.otpRepository.Create(entities.NewOtp(payload.Email, otpCode, time.Now().Add(time.Minute*5)))
 	if err != nil {
 		srv.logger.Error("error storing email code for user", zap.Error(err))
-		return map[string]interface{}{"error": "could not send reset email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "could not send reset email", Status: http.StatusInternalServerError}
 	}
 
 	err = srv.mailer.To(payload.Email).Subject("Reset password").
 		Body(mail.NewForgotPasswordMail(otpCode)).Send()
 	if err != nil {
-		return map[string]interface{}{"error": "could not send reset email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "could not send reset email", Status: http.StatusInternalServerError}
 	}
 
 	return nil
@@ -196,14 +196,14 @@ func (srv *AuthCommandService) ResetPassword(payload *ResetPasswordRequest) inte
 	srv.logger.Info("checking if record exists")
 	if reflect.DeepEqual(user, &dtos.UserResponse{}) {
 		srv.logger.Warn("user record not found", zap.String("email", payload.Email))
-		return map[string]interface{}{"error": "record not found", "code": http.StatusNotFound}
+		return dtos.ErrorResponse{Message: "record not found", Status: http.StatusNotFound}
 	}
 
 	srv.logger.Info("retrieve otp data")
 	response, err := srv.otpRepository.Find(payload.Email)
 	if err != nil {
 		srv.logger.Error("encountered an error retrieiving otp info", zap.Error(err))
-		return map[string]interface{}{"error": "there was an error verifying email", "code": http.StatusBadRequest}
+		return dtos.ErrorResponse{Message: "there was an error verifying email", Status: http.StatusBadRequest}
 	}
 
 	code := strconv.Itoa(response.Code)
@@ -213,13 +213,13 @@ func (srv *AuthCommandService) ResetPassword(payload *ResetPasswordRequest) inte
 			srv.otpRepository.Delete(response.UUID)
 		}
 		srv.logger.Info("otp code expired for", zap.String("email", payload.Email))
-		return map[string]interface{}{"error": "otp code expired or invalid", "code": http.StatusBadRequest}
+		return dtos.ErrorResponse{Message: "otp code expired or invalid", Status: http.StatusBadRequest}
 	}
 
 	srv.logger.Info("verifing email address", zap.String("email", payload.Email))
 	if err = srv.userRepository.Update(user.ID, &entities.User{Password: utils.HashPassword(payload.Password)}); err != nil {
 		srv.logger.Error("encountered an error updating email status", zap.Error(err))
-		return map[string]interface{}{"error": "there was an error verifying email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "there was an error verifying email", Status: http.StatusInternalServerError}
 	}
 
 	return nil
@@ -232,14 +232,14 @@ func (srv *AuthCommandService) VerifyEmail(payload *VerifyEmailRequest) interfac
 	srv.logger.Info("checking if record exists")
 	if reflect.DeepEqual(user, &dtos.UserResponse{}) {
 		srv.logger.Warn("user record not found", zap.String("email", payload.Email))
-		return map[string]interface{}{"error": "record not found", "code": http.StatusNotFound}
+		return dtos.ErrorResponse{Message: "record not found", Status: http.StatusNotFound}
 	}
 
 	srv.logger.Info("retrieve otp data")
 	response, err := srv.otpRepository.Find(payload.Email)
 	if err != nil {
 		srv.logger.Error("encountered an error retrieiving otp info", zap.Error(err))
-		return map[string]interface{}{"error": "there was an error verifying email", "code": http.StatusBadRequest}
+		return dtos.ErrorResponse{Message: "there was an error verifying email", Status: http.StatusBadRequest}
 	}
 
 	code := strconv.Itoa(response.Code)
@@ -249,19 +249,19 @@ func (srv *AuthCommandService) VerifyEmail(payload *VerifyEmailRequest) interfac
 			srv.otpRepository.Delete(response.UUID)
 		}
 		srv.logger.Info("otp code expired for", zap.String("email", payload.Email))
-		return map[string]interface{}{"error": "otp code expired or invalid", "code": http.StatusBadRequest}
+		return dtos.ErrorResponse{Message: "otp code expired or invalid", Status: http.StatusBadRequest}
 	}
 
 	srv.logger.Info("delete otp record after verification")
 	if err = srv.otpRepository.Delete(response.UUID); err != nil {
 		srv.logger.Error("encountered an error deleting otp record", zap.Error(err))
-		return map[string]interface{}{"error": "there was an error verifying email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "there was an error verifying email", Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("verifing email address", zap.String("email", payload.Email))
 	if err = srv.userRepository.Update(user.ID, &entities.User{EmailVerified: true}); err != nil {
 		srv.logger.Error("encountered an error updating email status", zap.Error(err))
-		return map[string]interface{}{"error": "there was an error verifying email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "there was an error verifying email", Status: http.StatusInternalServerError}
 	}
 
 	return nil
@@ -274,11 +274,11 @@ func (srv *AuthCommandService) ResendConfirmEmail(payload *ResendEmailRequest) i
 	srv.logger.Info("checking if record exists")
 	if reflect.DeepEqual(user, &dtos.UserResponse{}) {
 		srv.logger.Warn("user record not found", zap.String("email", payload.Email))
-		return map[string]interface{}{"error": "invalid email address", "code": http.StatusNotFound}
+		return dtos.ErrorResponse{Message: "invalid email address", Status: http.StatusNotFound}
 	}
 
 	if user.EmailVerified {
-		return map[string]interface{}{"error": "email address already verified", "code": http.StatusBadRequest}
+		return dtos.ErrorResponse{Message: "email address already verified", Status: http.StatusBadRequest}
 	}
 
 	srv.logger.Info("check if otp ecord exists for email", zap.String("email", payload.Email))
@@ -291,13 +291,13 @@ func (srv *AuthCommandService) ResendConfirmEmail(payload *ResendEmailRequest) i
 	err := srv.otpRepository.Create(entities.NewOtp(payload.Email, otpCode, time.Now().Add(time.Minute*5)))
 	if err != nil {
 		srv.logger.Error("error storing email code for user", zap.Error(err))
-		return map[string]interface{}{"error": "could not resend confirmation email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "could not resend confirmation email", Status: http.StatusInternalServerError}
 	}
 
 	err = srv.mailer.To(payload.Email).Subject("Verify Email Address").
 		Body(mail.NewResendConfirmationMail(otpCode)).Send()
 	if err != nil {
-		return map[string]interface{}{"error": "could not resend confirmation email", "code": http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "could not resend confirmation email", Status: http.StatusInternalServerError}
 	}
 
 	return nil
