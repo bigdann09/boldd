@@ -13,17 +13,15 @@ type User struct {
 	PhoneNumber   string
 	Password      string
 	EmailVerified bool
-	ReferralToken string
 }
 
 func NewUser(fullname, email, phoneNumber, password string) *User {
 	return &User{
-		UUID:          uuid.NewString(),
-		Fullname:      fullname,
-		Email:         email,
-		Password:      password,
-		PhoneNumber:   phoneNumber,
-		ReferralToken: "",
+		UUID:        uuid.NewString(),
+		Fullname:    fullname,
+		Email:       email,
+		Password:    password,
+		PhoneNumber: phoneNumber,
 	}
 }
 

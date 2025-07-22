@@ -17,9 +17,8 @@ import (
 )
 
 type IAuthCommandService interface {
-	Logout()
 	Login(payload *LoginRequest) (*AuthResponse, interface{})
-	Register(payload *RegisterRequest) (*AuthResponse, interface{})
+	Register(payload *RegisterRequest) interface{}
 	VerifyEmail(payload *VerifyEmailRequest) interface{}
 	RefreshToken(payload *RefreshTokenRequest) (*AuthResponse, interface{})
 	ResetPassword(payload *ResetPasswordRequest) interface{}
@@ -47,7 +46,7 @@ func NewAuthCommandService(
 	return &AuthCommandService{userRepository, otpRepository, addressRepository, tokensrv, logger, mailer}
 }
 
-func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse, interface{}) {
+func (srv *AuthCommandService) Register(payload *RegisterRequest) interface{} {
 	srv.logger.Info("adding new user to database")
 	newUser := entities.NewUser(
 		payload.FullName,
@@ -58,7 +57,7 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 	err := srv.userRepository.Create(newUser)
 	if err != nil {
 		srv.logger.Error("there was an error adding user", zap.Error(err))
-		return &AuthResponse{}, dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("assign customer role to new user")
@@ -66,14 +65,14 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		srv.logger.Info("deleting new user record")
 		srv.userRepository.Delete(int(newUser.ID))
 		srv.logger.Error("error assigning role to user", zap.Error(err))
-		return &AuthResponse{}, dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
 	otpCode := utils.GenerateOTP()
 	srv.logger.Info("store user otp for email verification")
 	if err := srv.otpRepository.Create(entities.NewOtp(newUser.Email, otpCode, time.Now().Add(time.Minute*5))); err != nil {
 		srv.logger.Error("error storing email code for user", zap.Error(err))
-		return &AuthResponse{}, dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
 	srv.logger.Info("sending registration email to user")
@@ -81,13 +80,10 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		Body(mail.NewRegistrationMail(newUser.Fullname, otpCode)).
 		Send(); err != nil {
 		srv.logger.Error("error sending email to user", zap.Error(err))
-		return &AuthResponse{}, dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
+		return dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
-	return &AuthResponse{
-		AccessToken:  srv.tokensrv.GenerateAccessToken(int(newUser.ID), "customer"),
-		RefreshToken: srv.tokensrv.GenerateRefreshToken(int(newUser.ID)),
-	}, nil
+	return nil
 }
 
 func (srv *AuthCommandService) Login(payload *LoginRequest) (*AuthResponse, interface{}) {
@@ -116,14 +112,8 @@ func (srv *AuthCommandService) Login(payload *LoginRequest) (*AuthResponse, inte
 		return &AuthResponse{}, dtos.ErrorResponse{Message: "email address not verified", Status: http.StatusBadRequest}
 	}
 
-	roles, err := srv.userRepository.Roles(user.ID)
-	if err != nil {
-		srv.logger.Error("could not retrieve user roles")
-		return &AuthResponse{}, dtos.ErrorResponse{Message: "error authenticating user", Status: http.StatusInternalServerError}
-	}
-
 	return &AuthResponse{
-		AccessToken:  srv.tokensrv.GenerateAccessToken(int(user.ID), roles...),
+		AccessToken:  srv.tokensrv.GenerateAccessToken(int(user.ID), user.Email),
 		RefreshToken: srv.tokensrv.GenerateRefreshToken(int(user.ID)),
 	}, nil
 }
@@ -135,11 +125,8 @@ func (srv *AuthCommandService) RefreshToken(payload *RefreshTokenRequest) (*Auth
 		return &AuthResponse{}, dtos.ErrorResponse{Message: "refresh token expired", Status: http.StatusInternalServerError}
 	}
 
-	srv.logger.Info("retrieve user roles from claims")
-	roles, _ := srv.userRepository.Roles(uint(claims.Id))
-
 	return &AuthResponse{
-		AccessToken:  srv.tokensrv.GenerateAccessToken(claims.Id, roles...),
+		AccessToken:  srv.tokensrv.GenerateAccessToken(claims.Id, claims.Email),
 		RefreshToken: payload.RefreshToken,
 	}, nil
 }

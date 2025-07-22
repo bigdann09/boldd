@@ -106,7 +106,7 @@ func (app *Application) registerroutes() *gin.Engine {
 	middleware.Register(app.config, app.metrics)
 
 	// register routes
-	routes := routes.NewRouter(app.engine, app.services)
+	routes := routes.NewRouter(app.engine, app.services, middleware)
 	engine := routes.SetupRoutes()
 	return engine
 }

@@ -10,6 +10,12 @@ import (
 // @contact.name	Daniel Ibok
 // @contact.url	https://bigdann.vercel.com
 // @contact.email	dann.dev09@gmail.com
+
+// @securityDefinitions.apiKey	BearerAuth
+// @scheme						bearer
+// @in							header
+//
+//	@name						Authorization
 func main() {
 	// Load the configuration
 	path, err := config.LoadConfigPath()
@@ -32,3 +38,5 @@ func main() {
 	<-server.Done
 	log.Println("👋 Server shutdown gracefully...")
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiRW1haWwiOiJkYW5uQGdtYWlsLmNvbSIsImlzcyI6IjEiLCJzdWIiOiIxIiwiZXhwIjoxNzUzMTg1MzUxLCJpYXQiOjE3NTMxNzgxNTEsImp0aSI6IjEifQ.tnvc2C0hzMxTRVdGWx-Ixh-CuN55969n1LmtRXdRfDo

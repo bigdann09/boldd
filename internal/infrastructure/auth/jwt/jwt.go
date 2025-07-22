@@ -10,7 +10,7 @@ import (
 )
 
 type ITokenService interface {
-	GenerateAccessToken(id int, roles ...string) string
+	GenerateAccessToken(id int, email string) string
 	GenerateRefreshToken(id int) string
 	ValidateToken(token string) (*Claims, error)
 }
@@ -23,7 +23,7 @@ type TokenService struct {
 
 type Claims struct {
 	Id    int
-	Roles []string
+	Email string
 	jwt.RegisteredClaims
 }
 
@@ -35,10 +35,10 @@ func NewTokenService(cfg *config.JSWConfig) *TokenService {
 	}
 }
 
-func (srv TokenService) GenerateAccessToken(id int, roles ...string) string {
+func (srv TokenService) GenerateAccessToken(id int, email string) string {
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
 		Id:    id,
-		Roles: roles,
+		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ID:        strconv.Itoa(id),
 			Issuer:    strconv.Itoa(id),

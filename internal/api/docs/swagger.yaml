@@ -462,6 +462,27 @@ paths:
       summary: '"update a single category"'
       tags:
       - Category
+  /profile/:
+    get:
+      consumes:
+      - application/json
+      description: '"get user profile information"'
+      produces:
+      - application/json
+      responses:
+        "403":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: '"get user profile"'
+      tags:
+      - Profile
   /subcategories/:
     get:
       consumes:
@@ -602,4 +623,9 @@ paths:
       summary: '"update a single subcategory"'
       tags:
       - SubCategory
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

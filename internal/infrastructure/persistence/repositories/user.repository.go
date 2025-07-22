@@ -34,14 +34,24 @@ func (repo UserRepository) Create(user *entities.User) error {
 }
 
 func (repo UserRepository) Find(id int) (dtos.UserResponse, error) {
+	var data dtos.User
 	var response dtos.UserResponse
-	result := repo.db.Table("users").Where("id = ?", id).Scan(&response)
+	result := repo.db.Table("users").Where("id = ?", id).Scan(&data)
+	if result.Error == nil {
+		roles, _ := repo.Roles(data.ID)
+		response = data.Convert(roles...)
+	}
 	return response, result.Error
 }
 
 func (repo UserRepository) FindByEmail(email string) (dtos.UserResponse, error) {
+	var data dtos.User
 	var response dtos.UserResponse
-	result := repo.db.Table("users").Where("email = ?", email).Scan(&response)
+	result := repo.db.Table("users").Where("email = ?", email).Scan(&data)
+	if result.Error == nil {
+		roles, _ := repo.Roles(data.ID)
+		response = data.Convert(roles...)
+	}
 	return response, result.Error
 }
 

@@ -2,14 +2,11 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/boldd/internal/application/auth"
 	"github.com/boldd/internal/domain/dtos"
 	"github.com/boldd/internal/infrastructure/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 )
 
 type AuthController struct {
@@ -37,18 +34,14 @@ func (ctrl AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	response, err := ctrl.authsrv.Register(&payload)
+	err := ctrl.authsrv.Register(&payload)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)
 		return
 	}
 
-	accessExpiry, _ := strconv.Atoi(viper.GetStringMapString("jwt")["access_expiry"])
-	maxAge := time.Hour * 24 * time.Duration(accessExpiry)
-	c.SetCookie("Authorization", response.AccessToken, int(maxAge), "", "", false, false)
-
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, nil)
 }
 
 // @Summary		"authorize a user"
@@ -216,5 +209,3 @@ func (ctrl AuthController) VerifyEmail(c *gin.Context) {
 }
 
 func (ctrl AuthController) GoogleLogin(c *gin.Context) {}
-
-func (ctrl AuthController) Logout(c *gin.Context) {}
