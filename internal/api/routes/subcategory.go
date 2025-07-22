@@ -49,8 +49,8 @@ func (r Routes) subcategoryroutes() {
 	{
 		subcategory.GET("/", ctrl.Index)
 		subcategory.POST("/", ctrl.Store)
-		subcategory.GET("/:uuid", ctrl.Show)
-		subcategory.PUT("/:uuid", ctrl.Update)
-		subcategory.DELETE("/:uuid", ctrl.Delete)
+		subcategory.GET("/:id", ctrl.Show)
+		subcategory.PUT("/:id", ctrl.Update)
+		subcategory.DELETE("/:id", ctrl.Delete)
 	}
 }

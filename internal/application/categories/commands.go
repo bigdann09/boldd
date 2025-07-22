@@ -12,9 +12,9 @@ import (
 )
 
 type ICategoryCommand interface {
-	Delete(uuid string) interface{}
+	Delete(id string) interface{}
 	Create(payload *CreateCategoryRequest) interface{}
-	Update(uuid string, payload *UpdateCategoryRequest) interface{}
+	Update(id string, payload *UpdateCategoryRequest) interface{}
 }
 
 type CategoryCommand struct {
@@ -52,15 +52,15 @@ func (cmd CategoryCommand) Create(payload *CreateCategoryRequest) interface{} {
 	return nil
 }
 
-func (cmd CategoryCommand) Delete(uuid string) interface{} {
-	cmd.logger.Info("check if record exists before updating", zap.String("uuid", uuid))
-	if exists := cmd.categoryRepository.CategoryExistsByUUID(uuid); !exists {
-		cmd.logger.Warn("category record not found", zap.String("uuid", uuid))
+func (cmd CategoryCommand) Delete(id string) interface{} {
+	cmd.logger.Info("check if record exists before updating", zap.String("id", id))
+	if exists := cmd.categoryRepository.CategoryExistsByID(id); !exists {
+		cmd.logger.Warn("category record not found", zap.String("id", id))
 		return dtos.ErrorResponse{Message: "category not found", Status: http.StatusNotFound}
 	}
 
-	cmd.logger.Info("deleting category record", zap.String("uuid", uuid))
-	err := cmd.categoryRepository.Delete(uuid)
+	cmd.logger.Info("deleting category record", zap.String("id", id))
+	err := cmd.categoryRepository.Delete(id)
 	if err != nil {
 		cmd.logger.Error("could not delete category record", zap.Error(err))
 		return dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}
@@ -71,15 +71,15 @@ func (cmd CategoryCommand) Delete(uuid string) interface{} {
 	return nil
 }
 
-func (cmd CategoryCommand) Update(uuid string, payload *UpdateCategoryRequest) interface{} {
-	cmd.logger.Info("check if record exists before updating", zap.String("uuid", uuid))
-	if exists := cmd.categoryRepository.CategoryExistsByUUID(uuid); !exists {
-		cmd.logger.Warn("category record not found", zap.String("uuid", uuid))
+func (cmd CategoryCommand) Update(id string, payload *UpdateCategoryRequest) interface{} {
+	cmd.logger.Info("check if record exists before updating", zap.String("id", id))
+	if exists := cmd.categoryRepository.CategoryExistsByID(id); !exists {
+		cmd.logger.Warn("category record not found", zap.String("id", id))
 		return dtos.ErrorResponse{Message: "category not found", Status: http.StatusNotFound}
 	}
 
-	cmd.logger.Info("updating category record", zap.String("uuid", uuid))
-	err := cmd.categoryRepository.Update(uuid, entities.UpdateCategory(payload.Name))
+	cmd.logger.Info("updating category record", zap.String("id", id))
+	err := cmd.categoryRepository.Update(id, entities.UpdateCategory(payload.Name))
 	if err != nil {
 		cmd.logger.Error("could not update category record", zap.Error(err))
 		return dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}

@@ -12,7 +12,7 @@ import (
 )
 
 type ICategoryQuery interface {
-	Get(uuid string) (*dtos.CategoryResponse, interface{})
+	Get(id string) (*dtos.CategoryResponse, interface{})
 	GetAll(filter *dtos.CategoryQueryFilter) (utils.PaginationResponse[dtos.CategoryResponse], interface{})
 }
 
@@ -55,13 +55,13 @@ func (qry *CategoryQuery) GetAll(filter *dtos.CategoryQueryFilter) (utils.Pagina
 	return categories, nil
 }
 
-func (qry *CategoryQuery) Get(uuid string) (*dtos.CategoryResponse, interface{}) {
-	key := fmt.Sprintf("categories_%s", uuid)
+func (qry *CategoryQuery) Get(id string) (*dtos.CategoryResponse, interface{}) {
+	key := fmt.Sprintf("categories_%s", id)
 	qry.logger.Info("retrieving from cache if data exists else setting to cache")
 	category, err := qry.categoryCache.GetOrSet(
 		key,
 		func() (*dtos.CategoryResponse, error) {
-			return qry.categoryRepository.Find(uuid)
+			return qry.categoryRepository.Find(id)
 		},
 	)
 	if err != nil {

@@ -395,7 +395,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/categories/{uuid}": {
+        "/categories/{id}": {
             "get": {
                 "description": "\"retrieve a single category from database\"",
                 "consumes": [
@@ -411,8 +411,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "category uuid",
-                        "name": "uuid",
+                        "description": "category id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -453,13 +453,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "category uuid",
-                        "name": "uuid",
+                        "description": "category id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "category uuid",
+                        "description": "category id",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -498,8 +498,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "category uuid",
-                        "name": "uuid",
+                        "description": "category id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -607,7 +607,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/subcategories/{uuid}": {
+        "/subcategories/{id}": {
             "get": {
                 "description": "\"retrieve a single subcategory from database\"",
                 "consumes": [
@@ -623,8 +623,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "subcategory uuid",
-                        "name": "uuid",
+                        "description": "subcategory id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -665,13 +665,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "category uuid",
-                        "name": "uuid",
+                        "description": "category id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "category uuid",
+                        "description": "category id",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -710,8 +710,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "subcategory uuid",
-                        "name": "uuid",
+                        "description": "subcategory id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -734,29 +734,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "auth.Address": {
-            "type": "object",
-            "required": [
-                "address",
-                "city",
-                "state",
-                "zip_code"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "city": {
-                    "type": "string"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "zip_code": {
-                    "type": "string"
-                }
-            }
-        },
         "auth.AuthResponse": {
             "type": "object",
             "properties": {
@@ -797,19 +774,12 @@ const docTemplate = `{
         "auth.RegisterRequest": {
             "type": "object",
             "required": [
-                "addresses",
                 "email",
                 "fullname",
                 "password",
                 "phone_number"
             ],
             "properties": {
-                "addresses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/auth.Address"
-                    }
-                },
                 "email": {
                     "type": "string"
                 },
@@ -900,12 +870,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
-                },
-                "name": {
                     "type": "string"
                 },
-                "uuid": {
+                "name": {
                     "type": "string"
                 }
             }
@@ -925,12 +892,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "category_id": {
-                    "type": "integer"
-                },
-                "name": {
                     "type": "string"
                 },
-                "uuid": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -943,7 +910,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category_id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"

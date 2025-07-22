@@ -2,18 +2,16 @@ package entities
 
 import (
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type Category struct {
-	gorm.Model
-	UUID string
+	ID   string
 	Name string
 }
 
 func NewCategory(name string) *Category {
 	return &Category{
-		UUID: uuid.NewString(),
+		ID:   uuid.NewString(),
 		Name: name,
 	}
 }

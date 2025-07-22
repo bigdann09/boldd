@@ -1,20 +1,4 @@
 definitions:
-  auth.Address:
-    properties:
-      address:
-        type: string
-      city:
-        type: string
-      state:
-        type: string
-      zip_code:
-        type: string
-    required:
-    - address
-    - city
-    - state
-    - zip_code
-    type: object
   auth.AuthResponse:
     properties:
       access_token:
@@ -41,10 +25,6 @@ definitions:
     type: object
   auth.RegisterRequest:
     properties:
-      addresses:
-        items:
-          $ref: '#/definitions/auth.Address'
-        type: array
       email:
         type: string
       fullname:
@@ -57,7 +37,6 @@ definitions:
       phone_number:
         type: string
     required:
-    - addresses
     - email
     - fullname
     - password
@@ -112,10 +91,8 @@ definitions:
   dtos.CategoryResponse:
     properties:
       id:
-        type: integer
-      name:
         type: string
-      uuid:
+      name:
         type: string
     type: object
   dtos.ErrorResponse:
@@ -128,16 +105,16 @@ definitions:
   dtos.SubCategoryResponse:
     properties:
       category_id:
-        type: integer
-      name:
         type: string
-      uuid:
+      id:
+        type: string
+      name:
         type: string
     type: object
   subcategories.CreateSubCategoryRequest:
     properties:
       category_id:
-        type: integer
+        type: string
       name:
         type: string
     required:
@@ -402,15 +379,15 @@ paths:
       summary: '"product categories"'
       tags:
       - Category
-  /categories/{uuid}:
+  /categories/{id}:
     delete:
       consumes:
       - application/json
       description: '"retrieve a single category from database"'
       parameters:
-      - description: category uuid
+      - description: category id
         in: path
-        name: uuid
+        name: id
         required: true
         type: string
       produces:
@@ -432,9 +409,9 @@ paths:
       - application/json
       description: '"retrieve a single category from database"'
       parameters:
-      - description: category uuid
+      - description: category id
         in: path
-        name: uuid
+        name: id
         required: true
         type: string
       produces:
@@ -460,12 +437,12 @@ paths:
       - application/json
       description: '"update a single category in the database"'
       parameters:
-      - description: category uuid
+      - description: category id
         in: path
-        name: uuid
+        name: id
         required: true
         type: string
-      - description: category uuid
+      - description: category id
         in: body
         name: payload
         required: true
@@ -542,15 +519,15 @@ paths:
       summary: '"product subcategories"'
       tags:
       - SubCategory
-  /subcategories/{uuid}:
+  /subcategories/{id}:
     delete:
       consumes:
       - application/json
       description: '"retrieve a single subcategory from database"'
       parameters:
-      - description: subcategory uuid
+      - description: subcategory id
         in: path
-        name: uuid
+        name: id
         required: true
         type: string
       produces:
@@ -572,9 +549,9 @@ paths:
       - application/json
       description: '"retrieve a single subcategory from database"'
       parameters:
-      - description: subcategory uuid
+      - description: subcategory id
         in: path
-        name: uuid
+        name: id
         required: true
         type: string
       produces:
@@ -600,12 +577,12 @@ paths:
       - application/json
       description: '"update a single subcategory in the database"'
       parameters:
-      - description: category uuid
+      - description: category id
         in: path
-        name: uuid
+        name: id
         required: true
         type: string
-      - description: category uuid
+      - description: category id
         in: body
         name: payload
         required: true

@@ -48,8 +48,8 @@ func (r Routes) categoryroutes() {
 	{
 		category.GET("/", ctrl.Index)
 		category.POST("/", ctrl.Store)
-		category.GET("/:uuid", ctrl.Show)
-		category.PUT("/:uuid", ctrl.Update)
-		category.DELETE("/:uuid", ctrl.Delete)
+		category.GET("/:id", ctrl.Show)
+		category.PUT("/:id", ctrl.Update)
+		category.DELETE("/:id", ctrl.Delete)
 	}
 }

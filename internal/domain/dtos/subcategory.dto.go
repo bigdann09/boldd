@@ -1,9 +1,9 @@
 package dtos
 
 type SubCategoryResponse struct {
-	UUID       string `json:"uuid"`
+	ID         string `json:"id"`
 	Name       string `json:"name"`
-	CategoryID uint   `json:"category_id"`
+	CategoryID string `json:"category_id"`
 }
 
 type SubCategoryQueryFilter struct {

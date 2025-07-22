@@ -12,9 +12,9 @@ import (
 )
 
 type ISubCategoryCommand interface {
-	Delete(uuid string) interface{}
+	Delete(id string) interface{}
 	Create(payload *CreateSubCategoryRequest) interface{}
-	Update(uuid string, payload *UpdateSubCategoryRequest) interface{}
+	Update(id string, payload *UpdateSubCategoryRequest) interface{}
 }
 
 type SubCategoryCommand struct {
@@ -36,7 +36,7 @@ func NewSubCategoryCommand(
 func (cmd SubCategoryCommand) Create(payload *CreateSubCategoryRequest) interface{} {
 	cmd.logger.Info("check if category ID is registered or valid")
 	if exists := cmd.categoryRepository.CategoryExistsByID(payload.CategoryID); !exists {
-		cmd.logger.Warn("category record not found or invalid", zap.Uint("category", payload.CategoryID))
+		cmd.logger.Warn("category record not found or invalid", zap.String("category", payload.CategoryID))
 		return dtos.ErrorResponse{Message: "category record not found or invalid", Status: http.StatusBadRequest}
 	}
 
@@ -60,15 +60,15 @@ func (cmd SubCategoryCommand) Create(payload *CreateSubCategoryRequest) interfac
 	return nil
 }
 
-func (cmd SubCategoryCommand) Delete(uuid string) interface{} {
-	cmd.logger.Info("check if record exists before updating", zap.String("uuid", uuid))
-	if exists := cmd.subcategoryRepository.SubCategoryExistsByUUID(uuid); !exists {
-		cmd.logger.Warn("subcategory record not found", zap.String("uuid", uuid))
+func (cmd SubCategoryCommand) Delete(id string) interface{} {
+	cmd.logger.Info("check if record exists before updating", zap.String("id", id))
+	if exists := cmd.subcategoryRepository.SubCategoryExistsByID(id); !exists {
+		cmd.logger.Warn("subcategory record not found", zap.String("id", id))
 		return dtos.ErrorResponse{Message: "subcategory not found", Status: http.StatusNotFound}
 	}
 
-	cmd.logger.Info("deleting subcategory record", zap.String("uuid", uuid))
-	err := cmd.subcategoryRepository.Delete(uuid)
+	cmd.logger.Info("deleting subcategory record", zap.String("id", id))
+	err := cmd.subcategoryRepository.Delete(id)
 	if err != nil {
 		cmd.logger.Error("could not delete subcategory record", zap.Error(err))
 		return dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}
@@ -79,15 +79,15 @@ func (cmd SubCategoryCommand) Delete(uuid string) interface{} {
 	return nil
 }
 
-func (cmd SubCategoryCommand) Update(uuid string, payload *UpdateSubCategoryRequest) interface{} {
-	cmd.logger.Info("check if record exists before updating", zap.String("uuid", uuid))
-	if exists := cmd.subcategoryRepository.SubCategoryExistsByUUID(uuid); !exists {
-		cmd.logger.Warn("subcategory record not found", zap.String("uuid", uuid))
+func (cmd SubCategoryCommand) Update(id string, payload *UpdateSubCategoryRequest) interface{} {
+	cmd.logger.Info("check if record exists before updating", zap.String("id", id))
+	if exists := cmd.subcategoryRepository.SubCategoryExistsByID(id); !exists {
+		cmd.logger.Warn("subcategory record not found", zap.String("id", id))
 		return dtos.ErrorResponse{Message: "subcategory not found", Status: http.StatusNotFound}
 	}
 
-	cmd.logger.Info("updating subcategory record", zap.String("uuid", uuid))
-	err := cmd.subcategoryRepository.Update(uuid, entities.UpdateSubCategory(payload.Name))
+	cmd.logger.Info("updating subcategory record", zap.String("id", id))
+	err := cmd.subcategoryRepository.Update(id, entities.UpdateSubCategory(payload.Name))
 	if err != nil {
 		cmd.logger.Error("could not update subcategory record", zap.Error(err))
 		return dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}

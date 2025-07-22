@@ -54,18 +54,18 @@ func (ctrl SubCategoryController) Index(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Schemes
-// @Param		uuid		path		string					true	"subcategory uuid"
+// @Param		id		path		string					true	"subcategory id"
 // @Success 200 	{object}	dtos.SubCategoryResponse									"category"
 // @Failure	404		{object}	dtos.ErrorResponse					"body"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/subcategories/{uuid} [get]
+// @Router		/subcategories/{id} [get]
 func (ctrl SubCategoryController) Show(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if strings.EqualFold(uuid, "") {
-		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	id := c.Param("id")
+	if strings.EqualFold(id, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "ID invalid or not present", Status: http.StatusBadRequest})
 	}
 
-	response, err := ctrl.query.Get(uuid)
+	response, err := ctrl.query.Get(id)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)
@@ -108,15 +108,15 @@ func (ctrl SubCategoryController) Store(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Schemes
-// @Param		uuid		path		string					true	"category uuid"
-// @Param		payload		body		subcategories.UpdateSubCategoryRequest		true	"category uuid"
+// @Param		id		path		string					true	"category id"
+// @Param		payload		body		subcategories.UpdateSubCategoryRequest		true	"category id"
 // @Failure	404		{object}	dtos.ErrorResponse					"body"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/subcategories/{uuid} [put]
+// @Router		/subcategories/{id} [put]
 func (ctrl SubCategoryController) Update(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if strings.EqualFold(uuid, "") {
-		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	id := c.Param("id")
+	if strings.EqualFold(id, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "ID invalid or not present", Status: http.StatusBadRequest})
 	}
 
 	var payload subcategories.UpdateSubCategoryRequest
@@ -125,7 +125,7 @@ func (ctrl SubCategoryController) Update(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.command.Update(uuid, &payload)
+	err := ctrl.command.Update(id, &payload)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)
@@ -141,17 +141,17 @@ func (ctrl SubCategoryController) Update(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Schemes
-// @Param		uuid		path		string					true	"subcategory uuid"
+// @Param		id		path		string					true	"subcategory id"
 // @Failure	404		{object}	dtos.ErrorResponse					"body"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/subcategories/{uuid} [delete]
+// @Router		/subcategories/{id} [delete]
 func (ctrl SubCategoryController) Delete(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if strings.EqualFold(uuid, "") {
-		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	id := c.Param("id")
+	if strings.EqualFold(id, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "ID invalid or not present", Status: http.StatusBadRequest})
 	}
 
-	err := ctrl.command.Delete(uuid)
+	err := ctrl.command.Delete(id)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)

@@ -12,7 +12,7 @@ import (
 )
 
 type ISubCategoryQuery interface {
-	Get(uuid string) (*dtos.SubCategoryResponse, interface{})
+	Get(id string) (*dtos.SubCategoryResponse, interface{})
 	GetAll(filter *dtos.SubCategoryQueryFilter) (utils.PaginationResponse[dtos.SubCategoryResponse], interface{})
 }
 
@@ -55,13 +55,13 @@ func (qry *SubCategoryQuery) GetAll(filter *dtos.SubCategoryQueryFilter) (utils.
 	return subcategories, nil
 }
 
-func (qry *SubCategoryQuery) Get(uuid string) (*dtos.SubCategoryResponse, interface{}) {
-	key := fmt.Sprintf("subcategories_%s", uuid)
+func (qry *SubCategoryQuery) Get(id string) (*dtos.SubCategoryResponse, interface{}) {
+	key := fmt.Sprintf("subcategories_%s", id)
 	qry.logger.Info("retrieving from cache if data exists else setting to cache")
 	subcategory, err := qry.subcategoryCache.GetOrSet(
 		key,
 		func() (*dtos.SubCategoryResponse, error) {
-			return qry.subcategoryRepository.Find(uuid)
+			return qry.subcategoryRepository.Find(id)
 		},
 	)
 	if err != nil {

@@ -11,13 +11,12 @@ import (
 )
 
 type ICategoryRepository interface {
-	Delete(uuid string) error
+	Delete(id string) error
 	CategoryExists(name string) bool
-	CategoryExistsByID(id uint) bool
-	CategoryExistsByUUID(uuid string) bool
+	CategoryExistsByID(id string) bool
 	Create(address *entities.Category) error
-	Find(uuid string) (*dtos.CategoryResponse, error)
-	Update(uuid string, category *entities.Category) error
+	Find(id string) (*dtos.CategoryResponse, error)
+	Update(id string, category *entities.Category) error
 	FindAllPaginated(filter *dtos.CategoryQueryFilter) (utils.PaginationResponse[dtos.CategoryResponse], error)
 }
 
@@ -47,9 +46,9 @@ func (repo CategoryRepository) FindAllPaginated(filter *dtos.CategoryQueryFilter
 	return utils.NewPaginationResponse[dtos.CategoryResponse](filter.Page, filter.PageSize, query)
 }
 
-func (repo CategoryRepository) Find(uuid string) (*dtos.CategoryResponse, error) {
+func (repo CategoryRepository) Find(id string) (*dtos.CategoryResponse, error) {
 	var response *dtos.CategoryResponse
-	result := repo.db.Table("categories").Where("uuid = ?", uuid).Scan(&response)
+	result := repo.db.Table("categories").Where("id = ?", id).Scan(&response)
 	return response, result.Error
 }
 
@@ -59,24 +58,18 @@ func (repo CategoryRepository) CategoryExists(name string) bool {
 	return exists
 }
 
-func (repo CategoryRepository) CategoryExistsByUUID(uuid string) bool {
-	var exists bool
-	repo.db.Raw("select exists (select 1 from categories where uuid = ?)", uuid).Scan(&exists)
-	return exists
-}
-
-func (repo CategoryRepository) CategoryExistsByID(id uint) bool {
+func (repo CategoryRepository) CategoryExistsByID(id string) bool {
 	var exists bool
 	repo.db.Raw("select exists (select 1 from categories where id = ?)", id).Scan(&exists)
 	return exists
 }
 
-func (repo CategoryRepository) Update(uuid string, category *entities.Category) error {
-	result := repo.db.Table("categories").Where("uuid = ?", uuid).Updates(category)
+func (repo CategoryRepository) Update(id string, category *entities.Category) error {
+	result := repo.db.Table("categories").Where("id = ?", id).Updates(category)
 	return result.Error
 }
 
-func (repo CategoryRepository) Delete(uuid string) error {
-	result := repo.db.Table("categories").Unscoped().Where("uuid = ?", uuid).Delete(&entities.Category{})
+func (repo CategoryRepository) Delete(id string) error {
+	result := repo.db.Table("categories").Unscoped().Where("id = ?", id).Delete(&entities.Category{})
 	return result.Error
 }

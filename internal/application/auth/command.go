@@ -61,17 +61,6 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) (*AuthResponse
 		return &AuthResponse{}, dtos.ErrorResponse{Message: err.Error(), Status: http.StatusInternalServerError}
 	}
 
-	srv.logger.Info("storing user addresses")
-	for _, address := range payload.Addresses {
-		srv.addressRepository.Create(entities.NewUserAddress(
-			newUser.ID,
-			address.State,
-			address.City,
-			address.ZipCode,
-			address.Address,
-		))
-	}
-
 	srv.logger.Info("assign customer role to new user")
 	if err = srv.userRepository.AssignRole(int(newUser.ID), "customer"); err != nil {
 		srv.logger.Info("deleting new user record")

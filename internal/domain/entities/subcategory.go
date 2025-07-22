@@ -2,19 +2,17 @@ package entities
 
 import (
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type SubCategory struct {
-	gorm.Model
-	UUID       string
+	ID         string
 	Name       string
-	CategoryID uint
+	CategoryID string
 }
 
-func NewSubCategory(name string, categoryID uint) *SubCategory {
+func NewSubCategory(name string, categoryID string) *SubCategory {
 	return &SubCategory{
-		UUID:       uuid.NewString(),
+		ID:         uuid.NewString(),
 		Name:       name,
 		CategoryID: categoryID,
 	}

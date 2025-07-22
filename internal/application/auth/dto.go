@@ -1,18 +1,10 @@
 package auth
 
 type RegisterRequest struct {
-	FullName    string    `json:"fullname" binding:"required,min=6,max=60"`
-	Email       string    `json:"email" binding:"required,email,unique_email"`
-	PhoneNumber string    `json:"phone_number" binding:"required"`
-	Password    string    `json:"password" binding:"required,min=6"`
-	Addresses   []Address `json:"addresses" binding:"required"`
-}
-
-type Address struct {
-	State   string `json:"state" binding:"required"`
-	City    string `json:"city" binding:"required"`
-	ZipCode string `json:"zip_code" binding:"required"`
-	Address string `json:"address" binding:"required"`
+	FullName    string `json:"fullname" binding:"required,min=6,max=60"`
+	Email       string `json:"email" binding:"required,email,unique_email"`
+	PhoneNumber string `json:"phone_number" binding:"required"`
+	Password    string `json:"password" binding:"required,min=6"`
 }
 
 type LoginRequest struct {
@@ -41,5 +33,5 @@ type ResetPasswordRequest struct {
 }
 
 type RefreshTokenRequest struct {
-	RefreshToken string `json:"refresh_token" binding:"required"`
+	RefreshToken string `json:"refresh_token" binding:"required,jwt"`
 }

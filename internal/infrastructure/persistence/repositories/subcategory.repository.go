@@ -13,7 +13,7 @@ import (
 type ISubCategoryRepository interface {
 	Delete(uuid string) error
 	SubCategoryExists(name string) bool
-	SubCategoryExistsByUUID(uuid string) bool
+	SubCategoryExistsByID(uuid string) bool
 	Create(address *entities.SubCategory) error
 	Find(uuid string) (*dtos.SubCategoryResponse, error)
 	Update(uuid string, category *entities.SubCategory) error
@@ -46,9 +46,9 @@ func (repo SubCategoryRepository) FindAllPaginated(filter *dtos.SubCategoryQuery
 	return utils.NewPaginationResponse[dtos.SubCategoryResponse](filter.Page, filter.PageSize, query)
 }
 
-func (repo SubCategoryRepository) Find(uuid string) (*dtos.SubCategoryResponse, error) {
+func (repo SubCategoryRepository) Find(id string) (*dtos.SubCategoryResponse, error) {
 	var response *dtos.SubCategoryResponse
-	result := repo.db.Table("subcategories").Where("uuid = ?", uuid).Scan(&response)
+	result := repo.db.Table("subcategories").Where("id = ?", id).Scan(&response)
 	return response, result.Error
 }
 
@@ -58,18 +58,18 @@ func (repo SubCategoryRepository) SubCategoryExists(name string) bool {
 	return exists
 }
 
-func (repo SubCategoryRepository) SubCategoryExistsByUUID(uuid string) bool {
+func (repo SubCategoryRepository) SubCategoryExistsByID(id string) bool {
 	var exists bool
-	repo.db.Raw("select exists (select 1 from subcategories where uuid = ?)", uuid).Scan(&exists)
+	repo.db.Raw("select exists (select 1 from subcategories where id = ?)", id).Scan(&exists)
 	return exists
 }
 
-func (repo SubCategoryRepository) Update(uuid string, category *entities.SubCategory) error {
-	result := repo.db.Table("subcategories").Where("uuid = ?", uuid).Updates(category)
+func (repo SubCategoryRepository) Update(id string, category *entities.SubCategory) error {
+	result := repo.db.Table("subcategories").Where("id = ?", id).Updates(category)
 	return result.Error
 }
 
-func (repo SubCategoryRepository) Delete(uuid string) error {
-	result := repo.db.Table("subcategories").Unscoped().Where("uuid = ?", uuid).Delete(&entities.SubCategory{})
+func (repo SubCategoryRepository) Delete(id string) error {
+	result := repo.db.Table("subcategories").Unscoped().Where("id = ?", id).Delete(&entities.SubCategory{})
 	return result.Error
 }

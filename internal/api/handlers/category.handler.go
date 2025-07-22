@@ -54,18 +54,18 @@ func (ctrl CategoryController) Index(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Schemes
-// @Param		uuid		path		string					true	"category uuid"
+// @Param		id		path		string					true	"category id"
 // @Success 200 	{object}	dtos.CategoryResponse									"category"
 // @Failure	404		{object}	dtos.ErrorResponse					"body"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/categories/{uuid} [get]
+// @Router		/categories/{id} [get]
 func (ctrl CategoryController) Show(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if strings.EqualFold(uuid, "") {
-		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	id := c.Param("id")
+	if strings.EqualFold(id, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "ID invalid or not present", Status: http.StatusBadRequest})
 	}
 
-	response, err := ctrl.query.Get(uuid)
+	response, err := ctrl.query.Get(id)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)
@@ -108,15 +108,15 @@ func (ctrl CategoryController) Store(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Schemes
-// @Param		uuid		path		string					true	"category uuid"
-// @Param		payload		body		categories.UpdateCategoryRequest		true	"category uuid"
+// @Param		id		path		string					true	"category id"
+// @Param		payload		body		categories.UpdateCategoryRequest		true	"category id"
 // @Failure	404		{object}	dtos.ErrorResponse					"body"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/categories/{uuid} [put]
+// @Router		/categories/{id} [put]
 func (ctrl CategoryController) Update(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if strings.EqualFold(uuid, "") {
-		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	id := c.Param("id")
+	if strings.EqualFold(id, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "ID invalid or not present", Status: http.StatusBadRequest})
 	}
 
 	var payload categories.UpdateCategoryRequest
@@ -125,7 +125,7 @@ func (ctrl CategoryController) Update(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.command.Update(uuid, &payload)
+	err := ctrl.command.Update(id, &payload)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)
@@ -141,17 +141,17 @@ func (ctrl CategoryController) Update(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Schemes
-// @Param		uuid		path		string					true	"category uuid"
+// @Param		id		path		string					true	"category id"
 // @Failure	404		{object}	dtos.ErrorResponse					"body"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/categories/{uuid} [delete]
+// @Router		/categories/{id} [delete]
 func (ctrl CategoryController) Delete(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if strings.EqualFold(uuid, "") {
-		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "UUID invalid or not present", Status: http.StatusBadRequest})
+	id := c.Param("id")
+	if strings.EqualFold(id, "") {
+		c.JSON(http.StatusBadRequest, dtos.ErrorResponse{Message: "ID invalid or not present", Status: http.StatusBadRequest})
 	}
 
-	err := ctrl.command.Delete(uuid)
+	err := ctrl.command.Delete(id)
 	if err != nil {
 		body := err.(dtos.ErrorResponse)
 		c.JSON(body.Status, body)
