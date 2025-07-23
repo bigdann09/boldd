@@ -24,6 +24,7 @@ func (m *Middleware) Auth() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: "unauthorized access to resource",
 			})
+			return
 		}
 
 		m.services.Logger.Info("parse token")
@@ -38,6 +39,7 @@ func (m *Middleware) Auth() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: "unauthorized access to resource",
 			})
+			return
 		}
 
 		m.services.Logger.Info("validate jwt token from header")
@@ -48,6 +50,7 @@ func (m *Middleware) Auth() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: "unauthorized access to resource",
 			})
+			return
 		}
 
 		m.services.Logger.Info("retrieve and cache user information")

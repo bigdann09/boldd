@@ -111,6 +111,16 @@ definitions:
       name:
         type: string
     type: object
+  profile.ChangePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
   subcategories.CreateSubCategoryRequest:
     properties:
       category_id:
@@ -481,6 +491,38 @@ paths:
       security:
       - BearerAuth: []
       summary: '"get user profile"'
+      tags:
+      - Profile
+  /profile/change-password:
+    post:
+      consumes:
+      - application/json
+      description: '"change authenticated user password"'
+      parameters:
+      - description: Change password payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/profile.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "403":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: '"change user password"'
       tags:
       - Profile
   /subcategories/:
