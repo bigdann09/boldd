@@ -21,7 +21,7 @@ func NewCategoryController(query categories.ICategoryQuery, command categories.I
 
 // @Summary		"get all categories"
 // @Description	"get all product categories"
-// @Tags			Category
+// @Tags			Categories
 // @Accept			json
 // @Produce		json
 // @Schemes
@@ -30,7 +30,7 @@ func NewCategoryController(query categories.ICategoryQuery, command categories.I
 // @Param		sort_by		query		string				false	"sort by"
 // @Param		order		query		string				false	"order"
 // @Failure	500			{object}	dtos.ErrorResponse	"body"
-// @Router		/categories/ [get]
+// @Router		/categories [get]
 func (ctrl CategoryController) Index(c *gin.Context) {
 	var filter dtos.CategoryQueryFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -50,7 +50,7 @@ func (ctrl CategoryController) Index(c *gin.Context) {
 
 // @Summary		"get a single category"
 // @Description	"retrieve a single category from database"
-// @Tags			Category
+// @Tags			Categories
 // @Accept			json
 // @Produce		json
 // @Schemes
@@ -77,14 +77,14 @@ func (ctrl CategoryController) Show(c *gin.Context) {
 
 // @Summary		"product categories"
 // @Description	"product categories"
-// @Tags			Category
+// @Tags			Categories
 // @Accept			json
 // @Produce		json
 // @Schemes
 // @Param		payload	body		categories.CreateCategoryRequest	true	"Create category payload"
 // @Success 201		""			""									"no response"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/categories/ [post]
+// @Router		/categories [post]
 func (ctrl CategoryController) Store(c *gin.Context) {
 	var payload categories.CreateCategoryRequest
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -104,7 +104,7 @@ func (ctrl CategoryController) Store(c *gin.Context) {
 
 // @Summary		"update a single category"
 // @Description	"update a single category in the database"
-// @Tags			Category
+// @Tags			Categories
 // @Accept			json
 // @Produce		json
 // @Schemes
@@ -137,7 +137,7 @@ func (ctrl CategoryController) Update(c *gin.Context) {
 
 // @Summary		"get a single category"
 // @Description	"retrieve a single category from database"
-// @Tags			Category
+// @Tags			Categories
 // @Accept			json
 // @Produce		json
 // @Schemes

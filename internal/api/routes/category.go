@@ -44,10 +44,10 @@ func (r Routes) categoryroutes() {
 	ctrl := handlers.NewCategoryController(query, command)
 
 	// register routes
-	category := r.engine.Group("categories")
+	category := r.engine.Group("categories/")
 	{
-		category.GET("/", ctrl.Index)
-		category.POST("/", ctrl.Store)
+		category.GET("", ctrl.Index)
+		category.POST("", ctrl.Store)
 		category.GET("/:id", ctrl.Show)
 		category.PUT("/:id", ctrl.Update)
 		category.DELETE("/:id", ctrl.Delete)

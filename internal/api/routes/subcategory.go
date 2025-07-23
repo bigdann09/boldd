@@ -45,10 +45,10 @@ func (r Routes) subcategoryroutes() {
 	ctrl := handlers.NewSubCategoryController(query, command)
 
 	// register routes
-	subcategory := r.engine.Group("subcategories")
+	subcategory := r.engine.Group("subcategories/")
 	{
-		subcategory.GET("/", ctrl.Index)
-		subcategory.POST("/", ctrl.Store)
+		subcategory.GET("", ctrl.Index)
+		subcategory.POST("", ctrl.Store)
 		subcategory.GET("/:id", ctrl.Show)
 		subcategory.PUT("/:id", ctrl.Update)
 		subcategory.DELETE("/:id", ctrl.Delete)

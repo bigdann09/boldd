@@ -1,4 +1,11 @@
 definitions:
+  attributes.CreateAttributeRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   auth.AuthResponse:
     properties:
       access_token:
@@ -144,6 +151,61 @@ info:
     name: Daniel Ibok
     url: https://bigdann.vercel.com
 paths:
+  /attributes:
+    get:
+      consumes:
+      - application/json
+      description: '"get all product attributes"'
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page data size
+        in: query
+        name: page_size
+        type: integer
+      - description: sort by
+        in: query
+        name: sort_by
+        type: string
+      - description: order
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get all product attributes"'
+      tags:
+      - Attributes
+    post:
+      consumes:
+      - application/json
+      description: '"retrieve a single attribute from database"'
+      parameters:
+      - description: Create attribute payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/attributes.CreateAttributeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get a single attribute"'
+      tags:
+      - Attributes
   /auth/forgot-password:
     post:
       consumes:
@@ -334,7 +396,7 @@ paths:
       summary: '"verify user email"'
       tags:
       - Auth
-  /categories/:
+  /categories:
     get:
       consumes:
       - application/json
@@ -365,7 +427,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get all categories"'
       tags:
-      - Category
+      - Categories
     post:
       consumes:
       - application/json
@@ -388,7 +450,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"product categories"'
       tags:
-      - Category
+      - Categories
   /categories/{id}:
     delete:
       consumes:
@@ -413,7 +475,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get a single category"'
       tags:
-      - Category
+      - Categories
     get:
       consumes:
       - application/json
@@ -441,7 +503,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get a single category"'
       tags:
-      - Category
+      - Categories
     put:
       consumes:
       - application/json
@@ -471,8 +533,8 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"update a single category"'
       tags:
-      - Category
-  /profile/:
+      - Categories
+  /profile:
     get:
       consumes:
       - application/json
@@ -525,7 +587,7 @@ paths:
       summary: '"change user password"'
       tags:
       - Profile
-  /subcategories/:
+  /subcategories:
     get:
       consumes:
       - application/json
@@ -556,7 +618,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get all subcategories"'
       tags:
-      - SubCategory
+      - Subcategories
     post:
       consumes:
       - application/json
@@ -581,7 +643,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"product subcategories"'
       tags:
-      - SubCategory
+      - Subcategories
   /subcategories/{id}:
     delete:
       consumes:
@@ -606,7 +668,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get a single subcategory"'
       tags:
-      - SubCategory
+      - Subcategories
     get:
       consumes:
       - application/json
@@ -634,7 +696,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get a single subcategory"'
       tags:
-      - SubCategory
+      - Subcategories
     put:
       consumes:
       - application/json
@@ -664,7 +726,7 @@ paths:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"update a single subcategory"'
       tags:
-      - SubCategory
+      - Subcategories
 securityDefinitions:
   BearerAuth:
     in: header

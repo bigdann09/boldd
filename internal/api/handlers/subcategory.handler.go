@@ -21,7 +21,7 @@ func NewSubCategoryController(query subcategories.ISubCategoryQuery, command sub
 
 // @Summary		"get all subcategories"
 // @Description	"get all product subcategories"
-// @Tags			SubCategory
+// @Tags			Subcategories
 // @Accept			json
 // @Produce		json
 // @Schemes
@@ -30,7 +30,7 @@ func NewSubCategoryController(query subcategories.ISubCategoryQuery, command sub
 // @Param		sort_by		query		string				false	"sort by"
 // @Param		order		query		string				false	"order"
 // @Failure	500			{object}	dtos.ErrorResponse	"body"
-// @Router		/subcategories/ [get]
+// @Router		/subcategories [get]
 func (ctrl SubCategoryController) Index(c *gin.Context) {
 	var filter dtos.SubCategoryQueryFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -50,7 +50,7 @@ func (ctrl SubCategoryController) Index(c *gin.Context) {
 
 // @Summary		"get a single subcategory"
 // @Description	"retrieve a single subcategory from database"
-// @Tags			SubCategory
+// @Tags			Subcategories
 // @Accept			json
 // @Produce		json
 // @Schemes
@@ -77,14 +77,14 @@ func (ctrl SubCategoryController) Show(c *gin.Context) {
 
 // @Summary		"product subcategories"
 // @Description	"product subcategories"
-// @Tags			SubCategory
+// @Tags			Subcategories
 // @Accept			json
 // @Produce		json
 // @Schemes
 // @Param		payload	body	subcategories.CreateSubCategoryRequest	true	"Create subcategory payload"
 // @Success 201		{null}			null									"no response"
 // @Failure	500		{object}	dtos.ErrorResponse					"body"
-// @Router		/subcategories/ [post]
+// @Router		/subcategories [post]
 func (ctrl SubCategoryController) Store(c *gin.Context) {
 	var payload subcategories.CreateSubCategoryRequest
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -104,7 +104,7 @@ func (ctrl SubCategoryController) Store(c *gin.Context) {
 
 // @Summary		"update a single subcategory"
 // @Description	"update a single subcategory in the database"
-// @Tags			SubCategory
+// @Tags			Subcategories
 // @Accept			json
 // @Produce		json
 // @Schemes
@@ -137,7 +137,7 @@ func (ctrl SubCategoryController) Update(c *gin.Context) {
 
 // @Summary		"get a single subcategory"
 // @Description	"retrieve a single subcategory from database"
-// @Tags			SubCategory
+// @Tags			Subcategories
 // @Accept			json
 // @Produce		json
 // @Schemes

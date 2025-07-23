@@ -27,7 +27,7 @@ func NewProfileController(command profile.IProfileCommand) *ProfileController {
 // @Failure	403			{object}	dtos.ErrorResponse	"body"
 // @Failure	500			{object}	dtos.ErrorResponse	"body"
 // @Security BearerAuth
-// @Router		/profile/ [get]
+// @Router		/profile [get]
 func (ctrl ProfileController) Show(c *gin.Context) {
 	c.JSON(http.StatusOK, common.GetAuthUser(c))
 }

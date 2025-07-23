@@ -19,6 +19,90 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/attributes": {
+            "get": {
+                "description": "\"get all product attributes\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "\"get all product attributes\"",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page data size",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sort by",
+                        "name": "sort_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "order",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "\"retrieve a single attribute from database\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "\"get a single attribute\"",
+                "parameters": [
+                    {
+                        "description": "Create attribute payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/attributes.CreateAttributeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
+                    },
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/forgot-password": {
             "post": {
                 "description": "\"forgot password request\"",
@@ -311,7 +395,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/categories/": {
+        "/categories": {
             "get": {
                 "description": "\"get all product categories\"",
                 "consumes": [
@@ -321,7 +405,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Category"
+                    "Categories"
                 ],
                 "summary": "\"get all categories\"",
                 "parameters": [
@@ -368,7 +452,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Category"
+                    "Categories"
                 ],
                 "summary": "\"product categories\"",
                 "parameters": [
@@ -405,7 +489,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Category"
+                    "Categories"
                 ],
                 "summary": "\"get a single category\"",
                 "parameters": [
@@ -447,7 +531,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Category"
+                    "Categories"
                 ],
                 "summary": "\"update a single category\"",
                 "parameters": [
@@ -492,7 +576,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Category"
+                    "Categories"
                 ],
                 "summary": "\"get a single category\"",
                 "parameters": [
@@ -520,7 +604,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/profile/": {
+        "/profile": {
             "get": {
                 "security": [
                     {
@@ -605,7 +689,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/subcategories/": {
+        "/subcategories": {
             "get": {
                 "description": "\"get all product subcategories\"",
                 "consumes": [
@@ -615,7 +699,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SubCategory"
+                    "Subcategories"
                 ],
                 "summary": "\"get all subcategories\"",
                 "parameters": [
@@ -662,7 +746,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SubCategory"
+                    "Subcategories"
                 ],
                 "summary": "\"product subcategories\"",
                 "parameters": [
@@ -702,7 +786,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SubCategory"
+                    "Subcategories"
                 ],
                 "summary": "\"get a single subcategory\"",
                 "parameters": [
@@ -744,7 +828,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SubCategory"
+                    "Subcategories"
                 ],
                 "summary": "\"update a single subcategory\"",
                 "parameters": [
@@ -789,7 +873,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SubCategory"
+                    "Subcategories"
                 ],
                 "summary": "\"get a single subcategory\"",
                 "parameters": [
@@ -819,6 +903,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "attributes.CreateAttributeRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.AuthResponse": {
             "type": "object",
             "properties": {

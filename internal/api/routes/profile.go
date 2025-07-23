@@ -27,10 +27,10 @@ func (r Routes) profileroutes() {
 	ctrl := handlers.NewProfileController(command)
 
 	// register routes
-	profile := r.engine.Group("profile")
+	profile := r.engine.Group("profile/")
 	profile.Use(r.middlewares.Auth())
 	{
-		profile.GET("/", ctrl.Show)
+		profile.GET("", ctrl.Show)
 		profile.POST("/change-password", ctrl.ChangePassword)
 	}
 }
