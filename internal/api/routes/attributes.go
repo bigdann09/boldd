@@ -46,6 +46,9 @@ func (r Routes) attributesroutes() {
 	attributes := r.engine.Group("attributes/")
 	{
 		attributes.GET("", ctrl.Index)
+		attributes.GET("/:id", ctrl.Show)
 		attributes.POST("", ctrl.Store)
+		attributes.PUT("/:id", ctrl.Update)
+		attributes.DELETE("/:id", ctrl.Delete)
 	}
 }
