@@ -21,12 +21,12 @@ func (r Routes) categoryroutes() {
 		cache.NewCache[*dtos.CategoryResponse](
 			r.services.Redis,
 			context.Background(),
-			time.Minute*5,
+			time.Duration(time.Second*40),
 		),
 		cache.NewCache[utils.PaginationResponse[dtos.CategoryResponse]](
 			r.services.Redis,
 			context.Background(),
-			time.Minute*5,
+			time.Duration(time.Second*40),
 		),
 	)
 

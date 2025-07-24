@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS attributes(
-    id UUID SERIAL PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

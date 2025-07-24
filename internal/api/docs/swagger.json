@@ -92,6 +92,131 @@
                 }
             }
         },
+        "/attributes/{id}": {
+            "get": {
+                "description": "\"retrieve a single attribute from database\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "\"get a single attribute\"",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "attribute id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "attribute",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AttributeResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "\"update a single attribute in the database\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "\"update a single attribute\"",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "attribute id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "attribute id",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/attributes.UpdateAttributeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "\"retrieve a single attribute from database\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "\"get a single attribute\"",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "attribute id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/forgot-password": {
             "post": {
                 "description": "\"forgot password request\"",
@@ -903,6 +1028,17 @@
                 }
             }
         },
+        "attributes.UpdateAttributeRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.AuthResponse": {
             "type": "object",
             "properties": {
@@ -1030,6 +1166,17 @@
                 "name"
             ],
             "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.AttributeResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 }

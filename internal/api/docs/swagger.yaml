@@ -6,6 +6,13 @@ definitions:
     required:
     - name
     type: object
+  attributes.UpdateAttributeRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   auth.AuthResponse:
     properties:
       access_token:
@@ -94,6 +101,13 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  dtos.AttributeResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
     type: object
   dtos.CategoryResponse:
     properties:
@@ -204,6 +218,89 @@ paths:
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"get a single attribute"'
+      tags:
+      - Attributes
+  /attributes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: '"retrieve a single attribute from database"'
+      parameters:
+      - description: attribute id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get a single attribute"'
+      tags:
+      - Attributes
+    get:
+      consumes:
+      - application/json
+      description: '"retrieve a single attribute from database"'
+      parameters:
+      - description: attribute id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: attribute
+          schema:
+            $ref: '#/definitions/dtos.AttributeResponse'
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get a single attribute"'
+      tags:
+      - Attributes
+    put:
+      consumes:
+      - application/json
+      description: '"update a single attribute in the database"'
+      parameters:
+      - description: attribute id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: attribute id
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/attributes.UpdateAttributeRequest'
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"update a single attribute"'
       tags:
       - Attributes
   /auth/forgot-password:

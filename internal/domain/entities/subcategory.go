@@ -1,6 +1,8 @@
 package entities
 
 import (
+	"strings"
+
 	"github.com/google/uuid"
 )
 
@@ -13,11 +15,11 @@ type SubCategory struct {
 func NewSubCategory(name string, categoryID string) *SubCategory {
 	return &SubCategory{
 		ID:         uuid.NewString(),
-		Name:       name,
+		Name:       strings.ToLower(name),
 		CategoryID: categoryID,
 	}
 }
 
 func UpdateSubCategory(name string) *SubCategory {
-	return &SubCategory{Name: name}
+	return &SubCategory{Name: strings.ToLower(name)}
 }
