@@ -99,7 +99,7 @@ func (ctrl AttributeController) Store(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, nil)
+	c.Status(http.StatusCreated)
 }
 
 // @Summary		"update a single attribute"
@@ -132,7 +132,7 @@ func (ctrl AttributeController) Update(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.Status(http.StatusOK)
 }
 
 // @Summary		"get a single attribute"
@@ -158,5 +158,5 @@ func (ctrl AttributeController) Delete(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.Status(http.StatusOK)
 }

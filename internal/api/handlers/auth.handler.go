@@ -123,7 +123,7 @@ func (ctrl AuthController) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.Status(http.StatusOK)
 }
 
 // @Summary		"forgot password"
@@ -150,7 +150,7 @@ func (ctrl AuthController) ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.Status(http.StatusOK)
 }
 
 // @Summary		"resend confirmation email"
@@ -177,7 +177,7 @@ func (ctrl AuthController) ResendConfirmationEmail(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.Status(http.StatusOK)
 }
 
 // @Summary		"verify user email"
@@ -205,7 +205,7 @@ func (ctrl AuthController) VerifyEmail(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.Status(http.StatusOK)
 }
 
 func (ctrl AuthController) GoogleLogin(c *gin.Context) {}
