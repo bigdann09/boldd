@@ -11,12 +11,13 @@ import (
 
 type Config struct {
 	ApplicationConfig `mapstructure:"application"`
-	DatabaseConfig    `mapstructure:"database"`
-	RedisConfig       `mapstructure:"redis"`
 	CorsConfig        `mapstructure:"cors"`
 	AWSConfig         `mapstructure:"aws"`
-	JSWConfig         `mapstructure:"jwt"`
+	JWTConfig         `mapstructure:"jwt"`
 	MailConfig        `mapstructure:"mail"`
+	RedisConfig
+	GoogleOAuthConfig
+	DatabaseConfig
 }
 
 type ApplicationConfig struct {
@@ -50,7 +51,7 @@ type AWSConfig struct {
 	Credential string
 }
 
-type JSWConfig struct {
+type JWTConfig struct {
 	Key           string `mapstructure:"key"`
 	AccessExpiry  int    `mapstructure:"access_expiry"`
 	RefreshExpiry int    `mapstructure:"refresh_expiry"`
@@ -62,6 +63,12 @@ type MailConfig struct {
 	Password string `mapstructure:"password"`
 	Host     string `mapstructure:"host"`
 	Port     int    `mapstructure:"port"`
+}
+
+type GoogleOAuthConfig struct {
+	ClientID     string
+	ClientSecret string
+	CallbackURL  string
 }
 
 func Load(path string) (*Config, error) {
@@ -82,6 +89,11 @@ func Load(path string) (*Config, error) {
 	if err := viper.Unmarshal(&cfg); err != nil {
 		log.Fatalf("unable to decode into struct %v", err)
 	}
+
+	log.Println("Load application core configs")
+	cfg.LoadDatabaseConfig()
+	cfg.LoadRedisConfig()
+	cfg.LoadGoogleConfig()
 
 	return &cfg, nil
 }
@@ -109,4 +121,32 @@ func LoadConfigPath() (string, error) {
 	}
 
 	return path, nil
+}
+
+func (cfg *Config) LoadGoogleConfig() {
+	cfg.GoogleOAuthConfig = GoogleOAuthConfig{
+		ClientID:     viper.GetString("GOOGLE_CLIENT_ID"),
+		ClientSecret: viper.GetString("GOOGLE_CLIENT_SECRET"),
+		CallbackURL:  viper.GetString("GOOGLE_CALLBACK_URI"),
+	}
+}
+
+func (cfg *Config) LoadDatabaseConfig() {
+	cfg.DatabaseConfig = DatabaseConfig{
+		Port:     viper.GetInt("DATABASE_PORT"),
+		Host:     viper.GetString("DATABASE_HOST"),
+		Database: viper.GetString("DATABASE_NAME"),
+		Username: viper.GetString("DATABASE_USER"),
+		Password: viper.GetString("DATABASE_PASS"),
+		SSLMode:  viper.GetString("DATABASE_SSLMODE"),
+	}
+}
+
+func (cfg *Config) LoadRedisConfig() {
+	cfg.RedisConfig = RedisConfig{
+		DB:       viper.GetInt("REDIS_DB"),
+		Address:  viper.GetString("REDIS_ADDRESS"),
+		Password: viper.GetString("REDIS_PASSWORD"),
+		Protocol: viper.GetInt("REDIS_PROTOCOL"),
+	}
 }

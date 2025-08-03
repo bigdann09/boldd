@@ -27,7 +27,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func NewTokenService(cfg *config.JSWConfig) *TokenService {
+func NewTokenService(cfg *config.JWTConfig) *TokenService {
 	return &TokenService{
 		key:            cfg.Key,
 		access_expiry:  cfg.AccessExpiry,

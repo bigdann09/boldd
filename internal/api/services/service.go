@@ -44,7 +44,7 @@ func NewServices(cfg *config.Config) *Service {
 	redis := redis.NewRedisClient(&cfg.RedisConfig)
 
 	// register token service
-	jwt := jwt.NewTokenService(&cfg.JSWConfig)
+	jwt := jwt.NewTokenService(&cfg.JWTConfig)
 
 	// register seeders
 	seeder := seeder.NewSeeder(db, logger)
