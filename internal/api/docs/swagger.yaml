@@ -417,6 +417,21 @@ paths:
       summary: '"forgot password"'
       tags:
       - Auth
+  /auth/google-login:
+    get:
+      consumes:
+      - application/json
+      description: '"Login via Google OAuth"'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"Google OAuth Login"'
+      tags:
+      - Auth
   /auth/login:
     post:
       consumes:

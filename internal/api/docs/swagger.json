@@ -278,6 +278,29 @@
                 }
             }
         },
+        "/auth/google-login": {
+            "get": {
+                "description": "\"Login via Google OAuth\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "\"Google OAuth Login\"",
+                "responses": {
+                    "400": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "\"Login user\"",

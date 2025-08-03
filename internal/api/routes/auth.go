@@ -23,6 +23,10 @@ func (r Routes) authroutes() {
 	// register routes
 	auth := r.engine.Group("auth")
 	{
+		auth.GET("/google-login", ctrl.GoogleLogin)
+		auth.GET("/google-logout", r.middlewares.Auth(), ctrl.GoogleLogout)
+		auth.GET("/google/callback", ctrl.GoogleLoginCallback)
+
 		auth.POST("/login", ctrl.Login)
 		auth.POST("/register", ctrl.Register)
 		auth.POST("/verify-email", ctrl.VerifyEmail)

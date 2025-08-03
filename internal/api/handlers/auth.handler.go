@@ -9,6 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Key string
+
+const providerkey Key = "provider"
+
 type AuthController struct {
 	authsrv auth.IAuthCommandService
 }
@@ -212,4 +216,38 @@ func (ctrl AuthController) VerifyEmail(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func (ctrl AuthController) GoogleLogin(c *gin.Context) {}
+// @Summary		"Google OAuth Login"
+// @Description	"Login via Google OAuth"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Failure	400		{object}	dtos.ErrorResponse		"body"
+// @Router		/auth/google-login [get]
+func (ctrl AuthController) GoogleLogin(c *gin.Context) {
+	ctrl.authsrv.GoogleOAuthLogin(c)
+}
+
+// @Summary		"Google OAuth Logout"
+// @Description	"Logout via Google OAuth"
+// @Tags			Auth
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Security	BearerAuth
+// @Failure	400		{object}	dtos.ErrorResponse		"body"
+// @Router		/auth/google-logout [get]
+func (ctrl AuthController) GoogleLogout(c *gin.Context) {
+	ctrl.authsrv.GoogleOAuthLogout(c)
+}
+
+func (ctrl AuthController) GoogleLoginCallback(c *gin.Context) {
+	response, err := ctrl.authsrv.GoogleOAuthCallbackLogin(c)
+	if err != nil {
+		body := err.(dtos.ErrorResponse)
+		c.JSON(body.Status, body)
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}

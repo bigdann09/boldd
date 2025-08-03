@@ -9,6 +9,7 @@ type User struct {
 	gorm.Model
 	UUID          string
 	Fullname      string
+	GoogleID      string
 	Email         string
 	PhoneNumber   string
 	Password      string
@@ -22,6 +23,15 @@ func NewUser(fullname, email, phoneNumber, password string) *User {
 		Email:       email,
 		Password:    password,
 		PhoneNumber: phoneNumber,
+	}
+}
+
+func NewGoogleUser(fullname, email string) *User {
+	return &User{
+		UUID:          uuid.NewString(),
+		Fullname:      fullname,
+		Email:         email,
+		EmailVerified: true,
 	}
 }
 

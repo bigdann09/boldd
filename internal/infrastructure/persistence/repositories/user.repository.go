@@ -18,6 +18,7 @@ type IUserRepository interface {
 	Roles(userID uint) ([]string, error)
 	Delete(id int) error
 	AssignRole(userID int, role string) error
+	FirstOrCreate(user *entities.User, googleID string) (entities.User, error)
 }
 
 type UserRepository struct {
@@ -31,6 +32,14 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 func (repo UserRepository) Create(user *entities.User) error {
 	result := repo.db.Table("users").Create(&user)
 	return result.Error
+}
+
+func (repo *UserRepository) FirstOrCreate(user *entities.User, googleID string) (entities.User, error) {
+	var newUser entities.User
+	result := repo.db.Table("users").FirstOrCreate(user, entities.User{
+		GoogleID: googleID,
+	}).Scan(&newUser)
+	return newUser, result.Error
 }
 
 func (repo UserRepository) Find(id int) (dtos.UserResponse, error) {

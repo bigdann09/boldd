@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -13,10 +15,18 @@ import (
 	"github.com/boldd/internal/infrastructure/mail"
 	"github.com/boldd/internal/infrastructure/persistence/repositories"
 	"github.com/boldd/pkgs/utils"
+	"github.com/gin-gonic/gin"
+	"github.com/markbates/goth/gothic"
 	"go.uber.org/zap"
 )
 
+// type ctxKey string
+
+// const providerKey ctxKey = "provider"
+
 type IAuthCommandService interface {
+	GoogleOAuthLogin(c *gin.Context)
+	GoogleOAuthLogout(c *gin.Context)
 	Login(payload *LoginRequest) (*AuthResponse, interface{})
 	Register(payload *RegisterRequest) interface{}
 	VerifyEmail(payload *VerifyEmailRequest) interface{}
@@ -24,6 +34,7 @@ type IAuthCommandService interface {
 	ResetPassword(payload *ResetPasswordRequest) interface{}
 	ForgotPassword(payload *ResendEmailRequest) interface{}
 	ResendConfirmEmail(payload *ResendEmailRequest) interface{}
+	GoogleOAuthCallbackLogin(c *gin.Context) (*AuthResponse, interface{})
 }
 
 type AuthCommandService struct {
@@ -277,4 +288,54 @@ func (srv *AuthCommandService) ResendConfirmEmail(payload *ResendEmailRequest) i
 	}
 
 	return nil
+}
+
+func (srv *AuthCommandService) GoogleOAuthLogin(c *gin.Context) {
+	srv.logger.Info("set provider in gin context")
+	request := c.Request.WithContext(context.WithValue(c.Request.Context(), "provider", "google"))
+
+	srv.logger.Info("Begin oauth login")
+	gothic.BeginAuthHandler(c.Writer, request)
+}
+
+func (srv *AuthCommandService) GoogleOAuthCallbackLogin(c *gin.Context) (*AuthResponse, interface{}) {
+	srv.logger.Info("Set provider in gin context")
+	request := c.Request.WithContext(context.WithValue(c.Request.Context(), "provider", "google"))
+
+	user, err := gothic.CompleteUserAuth(c.Writer, request)
+	if err != nil {
+		srv.logger.Error("Could not retrieve user information", zap.Error(err))
+		return &AuthResponse{}, dtos.ErrorResponse{
+			Message: "Could not retrieve user information",
+			Status:  http.StatusUnauthorized,
+		}
+	}
+
+	srv.logger.Info("Store user info in database")
+	newUser, err := srv.userRepository.FirstOrCreate(
+		entities.NewGoogleUser(
+			fmt.Sprintf("%s %s", user.FirstName, user.LastName),
+			user.Email,
+		),
+		user.UserID,
+	)
+	if err != nil {
+		srv.logger.Error("Encountered an error associated for creating user data", zap.Error(err))
+		return &AuthResponse{}, dtos.ErrorResponse{
+			Message: "There was an error storing user information",
+			Status:  http.StatusInternalServerError,
+		}
+	}
+
+	srv.logger.Info("Google login successfull, return access and refresh tokens")
+	return &AuthResponse{
+		AccessToken:  srv.tokensrv.GenerateAccessToken(int(newUser.ID), newUser.Email),
+		RefreshToken: srv.tokensrv.GenerateRefreshToken(int(newUser.ID)),
+	}, nil
+}
+
+func (src *AuthCommandService) GoogleOAuthLogout(c *gin.Context) {
+	gothic.Logout(c.Writer, c.Request)
+	c.Header("Location", "/")
+	c.Status(http.StatusTemporaryRedirect)
 }

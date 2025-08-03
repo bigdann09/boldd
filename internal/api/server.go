@@ -15,6 +15,10 @@ import (
 	"github.com/boldd/internal/config"
 	"github.com/boldd/internal/infrastructure/monitoring"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/sessions"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/google"
 	"go.uber.org/zap"
 )
 
@@ -42,6 +46,25 @@ func NewApplication(cfg *config.Config) *Application {
 	// register services
 	app.services = services.NewServices(app.config)
 	app.metrics = monitoring.NewMetrics()
+
+	store := sessions.NewCookieStore([]byte("jduiewdfjewfjkewjkfewifuwfiuwfuiw"))
+	store.MaxAge(86400 * 30)
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true
+	store.Options.Secure = false
+
+	gothic.Store = store
+
+	// load goth oauth providers
+	goth.UseProviders(
+		google.New(
+			cfg.GoogleOAuthConfig.ClientID,
+			cfg.GoogleOAuthConfig.ClientSecret,
+			cfg.GoogleOAuthConfig.CallbackURL,
+			"email",
+			"profile",
+		),
+	)
 
 	// set up the server
 	app.server = &http.Server{
