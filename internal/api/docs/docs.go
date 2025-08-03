@@ -92,7 +92,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     "500": {
                         "description": "body",
@@ -177,6 +180,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -213,6 +222,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -253,6 +268,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -419,6 +440,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -459,6 +486,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -499,6 +532,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "400": {
                         "description": "body",
                         "schema": {
@@ -593,7 +632,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     "500": {
                         "description": "body",
@@ -678,6 +720,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -714,6 +762,58 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "post": {
+                "description": "\"store a new product\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "\"store a product\"",
+                "parameters": [
+                    {
+                        "description": "product payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/products.CreateProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -748,6 +848,12 @@ const docTemplate = `{
                 ],
                 "summary": "\"get user profile\"",
                 "responses": {
+                    "200": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UserResponse"
+                        }
+                    },
                     "403": {
                         "description": "body",
                         "schema": {
@@ -793,6 +899,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "400": {
                         "description": "body",
                         "schema": {
@@ -854,6 +966,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "body",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
                     "500": {
                         "description": "body",
                         "schema": {
@@ -887,9 +1005,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "no response",
+                        "description": "No Content",
                         "schema": {
-                            "type": "null"
+                            "type": "string"
                         }
                     },
                     "500": {
@@ -975,6 +1093,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -1011,6 +1135,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
                         "description": "body",
                         "schema": {
@@ -1226,6 +1356,115 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "dtos.UserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "email_verified": {
+                    "type": "boolean"
+                },
+                "fullname": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "products.Attribute": {
+            "type": "object",
+            "required": [
+                "attribute_id",
+                "value"
+            ],
+            "properties": {
+                "attribute_id": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "products.CreateProductRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "images",
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "minLength": 30
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 10
+                },
+                "price": {
+                    "type": "number"
+                },
+                "variants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/products.ProductVariant"
+                    }
+                }
+            }
+        },
+        "products.ProductVariant": {
+            "type": "object",
+            "required": [
+                "attribute",
+                "images",
+                "price",
+                "quantity"
+            ],
+            "properties": {
+                "attribute": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/products.Attribute"
+                    }
+                },
+                "base_price": {
+                    "type": "number"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },

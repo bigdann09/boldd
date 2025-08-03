@@ -19,18 +19,19 @@ func NewSubCategoryController(query subcategories.ISubCategoryQuery, command sub
 	return &SubCategoryController{query, command}
 }
 
-// @Summary		"get all subcategories"
-// @Description	"get all product subcategories"
-// @Tags			Subcategories
-// @Accept			json
-// @Produce		json
-// @Schemes
-// @Param		page		query		int					false	"page number"
-// @Param		page_size	query		int					false	"page data size"
-// @Param		sort_by		query		string				false	"sort by"
-// @Param		order		query		string				false	"order"
-// @Failure	500			{object}	dtos.ErrorResponse	"body"
-// @Router		/subcategories [get]
+//	@Summary		"get all subcategories"
+//	@Description	"get all product subcategories"
+//	@Tags			Subcategories
+//	@Accept			json
+//	@Produce		json
+//	@Schemes
+//	@Param		page		query		int					false	"page number"
+//	@Param		page_size	query		int					false	"page data size"
+//	@Param		sort_by		query		string				false	"sort by"
+//	@Param		order		query		string				false	"order"
+//	@Success	200			{object}	object				"body"
+//	@Failure	500			{object}	dtos.ErrorResponse	"body"
+//	@Router		/subcategories [get]
 func (ctrl SubCategoryController) Index(c *gin.Context) {
 	var filter dtos.SubCategoryQueryFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -48,17 +49,17 @@ func (ctrl SubCategoryController) Index(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-// @Summary		"get a single subcategory"
-// @Description	"retrieve a single subcategory from database"
-// @Tags			Subcategories
-// @Accept			json
-// @Produce		json
-// @Schemes
-// @Param		id	path		string						true	"subcategory id"
-// @Success	200	{object}	dtos.SubCategoryResponse	"category"
-// @Failure	404	{object}	dtos.ErrorResponse			"body"
-// @Failure	500	{object}	dtos.ErrorResponse			"body"
-// @Router		/subcategories/{id} [get]
+//	@Summary		"get a single subcategory"
+//	@Description	"retrieve a single subcategory from database"
+//	@Tags			Subcategories
+//	@Accept			json
+//	@Produce		json
+//	@Schemes
+//	@Param		id	path		string						true	"subcategory id"
+//	@Success	200	{object}	dtos.SubCategoryResponse	"category"
+//	@Failure	404	{object}	dtos.ErrorResponse			"body"
+//	@Failure	500	{object}	dtos.ErrorResponse			"body"
+//	@Router		/subcategories/{id} [get]
 func (ctrl SubCategoryController) Show(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
@@ -75,16 +76,16 @@ func (ctrl SubCategoryController) Show(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-// @Summary		"product subcategories"
-// @Description	"product subcategories"
-// @Tags			Subcategories
-// @Accept			json
-// @Produce		json
-// @Schemes
-// @Param		payload	body		subcategories.CreateSubCategoryRequest	true	"Create subcategory payload"
-// @Success	201		{null}		null									"no response"
-// @Failure	500		{object}	dtos.ErrorResponse						"body"
-// @Router		/subcategories [post]
+//	@Summary		"product subcategories"
+//	@Description	"product subcategories"
+//	@Tags			Subcategories
+//	@Accept			json
+//	@Produce		json
+//	@Schemes
+//	@Param		payload	body		subcategories.CreateSubCategoryRequest	true	"Create subcategory payload"
+//	@Success	201		{string}	string									"No Content"
+//	@Failure	500		{object}	dtos.ErrorResponse						"body"
+//	@Router		/subcategories [post]
 func (ctrl SubCategoryController) Store(c *gin.Context) {
 	var payload subcategories.CreateSubCategoryRequest
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -102,17 +103,18 @@ func (ctrl SubCategoryController) Store(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
-// @Summary		"update a single subcategory"
-// @Description	"update a single subcategory in the database"
-// @Tags			Subcategories
-// @Accept			json
-// @Produce		json
-// @Schemes
-// @Param		id		path		string									true	"category id"
-// @Param		payload	body		subcategories.UpdateSubCategoryRequest	true	"category id"
-// @Failure	404		{object}	dtos.ErrorResponse						"body"
-// @Failure	500		{object}	dtos.ErrorResponse						"body"
-// @Router		/subcategories/{id} [put]
+//	@Summary		"update a single subcategory"
+//	@Description	"update a single subcategory in the database"
+//	@Tags			Subcategories
+//	@Accept			json
+//	@Produce		json
+//	@Schemes
+//	@Param		id		path		string									true	"category id"
+//	@Param		payload	body		subcategories.UpdateSubCategoryRequest	true	"category id"
+//	@Success	200		{string}	string									"OK"
+//	@Failure	404		{object}	dtos.ErrorResponse						"body"
+//	@Failure	500		{object}	dtos.ErrorResponse						"body"
+//	@Router		/subcategories/{id} [put]
 func (ctrl SubCategoryController) Update(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
@@ -135,16 +137,17 @@ func (ctrl SubCategoryController) Update(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// @Summary		"get a single subcategory"
-// @Description	"retrieve a single subcategory from database"
-// @Tags			Subcategories
-// @Accept			json
-// @Produce		json
-// @Schemes
-// @Param		id	path		string				true	"subcategory id"
-// @Failure	404	{object}	dtos.ErrorResponse	"body"
-// @Failure	500	{object}	dtos.ErrorResponse	"body"
-// @Router		/subcategories/{id} [delete]
+//	@Summary		"get a single subcategory"
+//	@Description	"retrieve a single subcategory from database"
+//	@Tags			Subcategories
+//	@Accept			json
+//	@Produce		json
+//	@Schemes
+//	@Param		id	path		string				true	"subcategory id"
+//	@Success	200	{string}	string				"OK"
+//	@Failure	404	{object}	dtos.ErrorResponse	"body"
+//	@Failure	500	{object}	dtos.ErrorResponse	"body"
+//	@Router		/subcategories/{id} [delete]
 func (ctrl SubCategoryController) Delete(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {

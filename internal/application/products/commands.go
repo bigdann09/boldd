@@ -9,6 +9,6 @@ func NewProductCommand() *ProductCommand {
 	return &ProductCommand{}
 }
 
-func (cmd ProductCommand) Create(payload *CreateProductCategory) {
+func (cmd ProductCommand) Create(payload *CreateProductRequest) {
 
 }

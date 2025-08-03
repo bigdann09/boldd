@@ -132,6 +132,80 @@ definitions:
       name:
         type: string
     type: object
+  dtos.UserResponse:
+    properties:
+      email:
+        type: string
+      email_verified:
+        type: boolean
+      fullname:
+        type: string
+      phone_number:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      uuid:
+        type: string
+    type: object
+  products.Attribute:
+    properties:
+      attribute_id:
+        type: string
+      value:
+        items:
+          type: string
+        type: array
+    required:
+    - attribute_id
+    - value
+    type: object
+  products.CreateProductRequest:
+    properties:
+      description:
+        minLength: 30
+        type: string
+      images:
+        items:
+          type: string
+        type: array
+      name:
+        minLength: 10
+        type: string
+      price:
+        type: number
+      variants:
+        items:
+          $ref: '#/definitions/products.ProductVariant'
+        type: array
+    required:
+    - description
+    - images
+    - name
+    type: object
+  products.ProductVariant:
+    properties:
+      attribute:
+        items:
+          $ref: '#/definitions/products.Attribute'
+        type: array
+      base_price:
+        type: number
+      images:
+        items:
+          type: string
+        type: array
+      price:
+        type: number
+      quantity:
+        type: integer
+    required:
+    - attribute
+    - images
+    - price
+    - quantity
+    type: object
   profile.ChangePasswordRequest:
     properties:
       new_password:
@@ -212,7 +286,9 @@ paths:
       - application/json
       responses:
         "201":
-          description: "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
+          description: No Content
+          schema:
+            type: string
         "500":
           description: body
           schema:
@@ -234,6 +310,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -292,6 +372,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -318,6 +402,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -426,6 +514,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -452,6 +544,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -478,6 +574,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "400":
           description: body
           schema:
@@ -540,7 +640,9 @@ paths:
       - application/json
       responses:
         "201":
-          description: "\t\t\t\"\"\t\t\t\t\t\t\t\t\t\"no response"
+          description: No Content
+          schema:
+            type: string
         "500":
           description: body
           schema:
@@ -562,6 +664,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -620,6 +726,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -631,6 +741,36 @@ paths:
       summary: '"update a single category"'
       tags:
       - Categories
+  /products:
+    post:
+      consumes:
+      - application/json
+      description: '"store a new product"'
+      parameters:
+      - description: product payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/products.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: No Content
+          schema:
+            type: string
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"store a product"'
+      tags:
+      - Products
   /profile:
     get:
       consumes:
@@ -639,6 +779,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.UserResponse'
         "403":
           description: body
           schema:
@@ -667,6 +811,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "400":
           description: body
           schema:
@@ -709,6 +857,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: body
+          schema:
+            type: object
         "500":
           description: body
           schema:
@@ -731,9 +883,9 @@ paths:
       - application/json
       responses:
         "201":
-          description: no response
+          description: No Content
           schema:
-            type: "null"
+            type: string
         "500":
           description: body
           schema:
@@ -755,6 +907,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
@@ -813,6 +969,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            type: string
         "404":
           description: body
           schema:
