@@ -18,34 +18,34 @@ func NewProfileController(command profile.IProfileCommand) *ProfileController {
 	return &ProfileController{command}
 }
 
-//	@Summary		"get user profile"
-//	@Description	"get user profile information"
-//	@Tags			Profile
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Success	200	{object}	dtos.UserResponse	"body"
-//	@Failure	403	{object}	dtos.ErrorResponse	"body"
-//	@Failure	500	{object}	dtos.ErrorResponse	"body"
-//	@Security	BearerAuth
-//	@Router		/profile [get]
+// @Summary		"get user profile"
+// @Description	"get user profile information"
+// @Tags			Profile
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Success	200	{object}	dtos.UserResponse	"body"
+// @Failure	403	{object}	dtos.ErrorResponse	"body"
+// @Failure	500	{object}	dtos.ErrorResponse	"body"
+// @Security	BearerAuth
+// @Router		/profile [get]
 func (ctrl ProfileController) Show(c *gin.Context) {
 	c.JSON(http.StatusOK, common.GetAuthUser(c))
 }
 
-//	@Summary		"change user password"
-//	@Description	"change authenticated user password"
-//	@Tags			Profile
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		payload	body		profile.ChangePasswordRequest	true	"Change password payload"
-//	@Success	200		{string}	string							"OK"
-//	@Failure	403		{object}	dtos.ErrorResponse				"body"
-//	@Failure	400		{object}	dtos.ErrorResponse				"body"
-//	@Failure	500		{object}	dtos.ErrorResponse				"body"
-//	@Security	BearerAuth
-//	@Router		/profile/change-password [post]
+// @Summary		"change user password"
+// @Description	"change authenticated user password"
+// @Tags			Profile
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		profile.ChangePasswordRequest	true	"Change password payload"
+// @Success	200		{string}	string							"OK"
+// @Failure	403		{object}	dtos.ErrorResponse				"body"
+// @Failure	400		{object}	dtos.ErrorResponse				"body"
+// @Failure	500		{object}	dtos.ErrorResponse				"body"
+// @Security	BearerAuth
+// @Router		/profile/change-password [post]
 func (ctrl ProfileController) ChangePassword(c *gin.Context) {
 	user := common.GetAuthUser(c)
 	var payload profile.ChangePasswordRequest

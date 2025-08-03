@@ -68,7 +68,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "\"retrieve a single attribute from database\"",
+                "description": "\"adds a new attribute to the database\"",
                 "consumes": [
                     "application/json"
                 ],
@@ -78,7 +78,7 @@ const docTemplate = `{
                 "tags": [
                     "Attributes"
                 ],
-                "summary": "\"get a single attribute\"",
+                "summary": "\"create a new attribute\"",
                 "parameters": [
                     {
                         "description": "Create attribute payload",

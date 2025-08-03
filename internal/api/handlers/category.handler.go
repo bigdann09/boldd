@@ -19,18 +19,18 @@ func NewCategoryController(query categories.ICategoryQuery, command categories.I
 	return &CategoryController{query, command}
 }
 
-//	@Summary		"get all categories"
-//	@Description	"get all product categories"
-//	@Tags			Categories
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		page		query		int					false	"page number"
-//	@Param		page_size	query		int					false	"page data size"
-//	@Param		sort_by		query		string				false	"sort by"
-//	@Param		order		query		string				false	"order"
-//	@Failure	500			{object}	dtos.ErrorResponse	"body"
-//	@Router		/categories [get]
+// @Summary		"get all categories"
+// @Description	"get all product categories"
+// @Tags			Categories
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		page		query		int					false	"page number"
+// @Param		page_size	query		int					false	"page data size"
+// @Param		sort_by		query		string				false	"sort by"
+// @Param		order		query		string				false	"order"
+// @Failure	500			{object}	dtos.ErrorResponse	"body"
+// @Router		/categories [get]
 func (ctrl CategoryController) Index(c *gin.Context) {
 	var filter dtos.CategoryQueryFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -48,17 +48,17 @@ func (ctrl CategoryController) Index(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-//	@Summary		"get a single category"
-//	@Description	"retrieve a single category from database"
-//	@Tags			Categories
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		id	path		string					true	"category id"
-//	@Success	200	{object}	dtos.CategoryResponse	"category"
-//	@Failure	404	{object}	dtos.ErrorResponse		"body"
-//	@Failure	500	{object}	dtos.ErrorResponse		"body"
-//	@Router		/categories/{id} [get]
+// @Summary		"get a single category"
+// @Description	"retrieve a single category from database"
+// @Tags			Categories
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		id	path		string					true	"category id"
+// @Success	200	{object}	dtos.CategoryResponse	"category"
+// @Failure	404	{object}	dtos.ErrorResponse		"body"
+// @Failure	500	{object}	dtos.ErrorResponse		"body"
+// @Router		/categories/{id} [get]
 func (ctrl CategoryController) Show(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
@@ -75,16 +75,16 @@ func (ctrl CategoryController) Show(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-//	@Summary		"product categories"
-//	@Description	"product categories"
-//	@Tags			Categories
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		payload	body		categories.CreateCategoryRequest	true	"Create category payload"
-//	@Success	201		{string}	string								"No Content"
-//	@Failure	500		{object}	dtos.ErrorResponse					"body"
-//	@Router		/categories [post]
+// @Summary		"product categories"
+// @Description	"product categories"
+// @Tags			Categories
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		categories.CreateCategoryRequest	true	"Create category payload"
+// @Success	201		{string}	string								"No Content"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/categories [post]
 func (ctrl CategoryController) Store(c *gin.Context) {
 	var payload categories.CreateCategoryRequest
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -102,18 +102,18 @@ func (ctrl CategoryController) Store(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
-//	@Summary		"update a single category"
-//	@Description	"update a single category in the database"
-//	@Tags			Categories
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		id		path		string								true	"category id"
-//	@Param		payload	body		categories.UpdateCategoryRequest	true	"category id"
-//	@Success	200		{string}	string								"OK"
-//	@Failure	404		{object}	dtos.ErrorResponse					"body"
-//	@Failure	500		{object}	dtos.ErrorResponse					"body"
-//	@Router		/categories/{id} [put]
+// @Summary		"update a single category"
+// @Description	"update a single category in the database"
+// @Tags			Categories
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		id		path		string								true	"category id"
+// @Param		payload	body		categories.UpdateCategoryRequest	true	"category id"
+// @Success	200		{string}	string								"OK"
+// @Failure	404		{object}	dtos.ErrorResponse					"body"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/categories/{id} [put]
 func (ctrl CategoryController) Update(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
@@ -136,17 +136,17 @@ func (ctrl CategoryController) Update(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-//	@Summary		"get a single category"
-//	@Description	"retrieve a single category from database"
-//	@Tags			Categories
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		id	path		string				true	"category id"
-//	@Success	200	{string}	string				"OK"
-//	@Failure	404	{object}	dtos.ErrorResponse	"body"
-//	@Failure	500	{object}	dtos.ErrorResponse	"body"
-//	@Router		/categories/{id} [delete]
+// @Summary		"get a single category"
+// @Description	"retrieve a single category from database"
+// @Tags			Categories
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		id	path		string				true	"category id"
+// @Success	200	{string}	string				"OK"
+// @Failure	404	{object}	dtos.ErrorResponse	"body"
+// @Failure	500	{object}	dtos.ErrorResponse	"body"
+// @Router		/categories/{id} [delete]
 func (ctrl CategoryController) Delete(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {

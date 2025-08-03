@@ -274,7 +274,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: '"retrieve a single attribute from database"'
+      description: '"adds a new attribute to the database"'
       parameters:
       - description: Create attribute payload
         in: body
@@ -293,7 +293,7 @@ paths:
           description: body
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
-      summary: '"get a single attribute"'
+      summary: '"create a new attribute"'
       tags:
       - Attributes
   /attributes/{id}:

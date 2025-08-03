@@ -19,18 +19,18 @@ func NewAttributeController(query attributes.IAttributeQuery, command attributes
 	return &AttributeController{query, command}
 }
 
-//	@Summary		"get all product attributes"
-//	@Description	"get all product attributes"
-//	@Tags			Attributes
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		page		query		int					false	"page number"
-//	@Param		page_size	query		int					false	"page data size"
-//	@Param		sort_by		query		string				false	"sort by"
-//	@Param		order		query		string				false	"order"
-//	@Failure	500			{object}	dtos.ErrorResponse	"body"
-//	@Router		/attributes [get]
+// @Summary		"get all product attributes"
+// @Description	"get all product attributes"
+// @Tags			Attributes
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		page		query		int					false	"page number"
+// @Param		page_size	query		int					false	"page data size"
+// @Param		sort_by		query		string				false	"sort by"
+// @Param		order		query		string				false	"order"
+// @Failure	500			{object}	dtos.ErrorResponse	"body"
+// @Router		/attributes [get]
 func (ctrl AttributeController) Index(c *gin.Context) {
 	var filter dtos.AttributeQueryFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -48,17 +48,17 @@ func (ctrl AttributeController) Index(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-//	@Summary		"get a single attribute"
-//	@Description	"retrieve a single attribute from database"
-//	@Tags			Attributes
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		id	path		string					true	"attribute id"
-//	@Success	200	{object}	dtos.AttributeResponse	"attribute"
-//	@Failure	404	{object}	dtos.ErrorResponse		"body"
-//	@Failure	500	{object}	dtos.ErrorResponse		"body"
-//	@Router		/attributes/{id} [get]
+// @Summary		"get a single attribute"
+// @Description	"retrieve a single attribute from database"
+// @Tags			Attributes
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		id	path		string					true	"attribute id"
+// @Success	200	{object}	dtos.AttributeResponse	"attribute"
+// @Failure	404	{object}	dtos.ErrorResponse		"body"
+// @Failure	500	{object}	dtos.ErrorResponse		"body"
+// @Router		/attributes/{id} [get]
 func (ctrl AttributeController) Show(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
@@ -75,16 +75,16 @@ func (ctrl AttributeController) Show(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-//	@Summary		"get a single attribute"
-//	@Description	"retrieve a single attribute from database"
-//	@Tags			Attributes
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		payload	body		attributes.CreateAttributeRequest	true	"Create attribute payload"
-//	@Success	201		{string}	string								"No Content"
-//	@Failure	500		{object}	dtos.ErrorResponse					"body"
-//	@Router		/attributes [post]
+// @Summary		"create a new attribute"
+// @Description	"adds a new attribute to the database"
+// @Tags			Attributes
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		payload	body		attributes.CreateAttributeRequest	true	"Create attribute payload"
+// @Success	201		{string}	string								"No Content"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/attributes [post]
 func (ctrl AttributeController) Store(c *gin.Context) {
 	var payload attributes.CreateAttributeRequest
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -102,18 +102,18 @@ func (ctrl AttributeController) Store(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
-//	@Summary		"update a single attribute"
-//	@Description	"update a single attribute in the database"
-//	@Tags			Attributes
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		id		path		string								true	"attribute id"
-//	@Param		payload	body		attributes.UpdateAttributeRequest	true	"attribute id"
-//	@Success	200		{string}	string								"OK"
-//	@Failure	404		{object}	dtos.ErrorResponse					"body"
-//	@Failure	500		{object}	dtos.ErrorResponse					"body"
-//	@Router		/attributes/{id} [put]
+// @Summary		"update a single attribute"
+// @Description	"update a single attribute in the database"
+// @Tags			Attributes
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		id		path		string								true	"attribute id"
+// @Param		payload	body		attributes.UpdateAttributeRequest	true	"attribute id"
+// @Success	200		{string}	string								"OK"
+// @Failure	404		{object}	dtos.ErrorResponse					"body"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Router		/attributes/{id} [put]
 func (ctrl AttributeController) Update(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
@@ -136,17 +136,17 @@ func (ctrl AttributeController) Update(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-//	@Summary		"get a single attribute"
-//	@Description	"retrieve a single attribute from database"
-//	@Tags			Attributes
-//	@Accept			json
-//	@Produce		json
-//	@Schemes
-//	@Param		id	path		string				true	"attribute id"
-//	@Success	200	{string}	string				"OK"
-//	@Failure	404	{object}	dtos.ErrorResponse	"body"
-//	@Failure	500	{object}	dtos.ErrorResponse	"body"
-//	@Router		/attributes/{id} [delete]
+// @Summary		"get a single attribute"
+// @Description	"retrieve a single attribute from database"
+// @Tags			Attributes
+// @Accept			json
+// @Produce		json
+// @Schemes
+// @Param		id	path		string				true	"attribute id"
+// @Success	200	{string}	string				"OK"
+// @Failure	404	{object}	dtos.ErrorResponse	"body"
+// @Failure	500	{object}	dtos.ErrorResponse	"body"
+// @Router		/attributes/{id} [delete]
 func (ctrl AttributeController) Delete(c *gin.Context) {
 	id := c.Param("id")
 	if strings.EqualFold(id, "") {
