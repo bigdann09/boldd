@@ -12,6 +12,10 @@ services:
       - boldd_api
     depends_on:
       - postgresdb
+    develop:
+      watch:
+        - path: .
+          action: rebuild
 
   postgresdb:
     image: postgres:latest

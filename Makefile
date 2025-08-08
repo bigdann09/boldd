@@ -8,6 +8,9 @@ DATABASE_URI := postgres://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${
 devrun:
 	go run cmd/api/main.go
 
+dockerrun:
+	docker compose watch
+
 migrate_create:
 	migrate create -ext=sql -dir=${MIGRATION_PATH} -seq ${name}
 
