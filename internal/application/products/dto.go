@@ -17,6 +17,20 @@ type ProductVariant struct {
 }
 
 type Attribute struct {
-	AttributeID string   `json:"attribute_id" binding:"required,number"`
-	Values      []string `json:"value" binding:"required,gt=0,dive,string"`
+	AttributeID string   `json:"attribute_id" binding:"required,uuid"`
+	Values      []string `json:"value" binding:"required,gt=0,dive"`
+}
+
+type AttributeCombination struct {
+	AttributeID string   `json:"attribute_id" binding:"required,uuid"`
+	Name        string   `json:"name" binding:"required"`
+	Values      []string `json:"values" binding:"required,gt=0,dive"`
+}
+
+type GenerateCombinationRequest struct {
+	Attributes []AttributeCombination `json:"attributes" binding:"required,gt=0,dive"`
+}
+
+type VariantCombinationResponse struct {
+	Combination []string `json:"combination"`
 }

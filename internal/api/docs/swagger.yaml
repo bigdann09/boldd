@@ -161,6 +161,21 @@ definitions:
     - attribute_id
     - value
     type: object
+  products.AttributeCombination:
+    properties:
+      attribute_id:
+        type: string
+      name:
+        type: string
+      values:
+        items:
+          type: string
+        type: array
+    required:
+    - attribute_id
+    - name
+    - values
+    type: object
   products.CreateProductRequest:
     properties:
       description:
@@ -184,6 +199,15 @@ definitions:
     - images
     - name
     type: object
+  products.GenerateCombinationRequest:
+    properties:
+      attributes:
+        items:
+          $ref: '#/definitions/products.AttributeCombination'
+        type: array
+    required:
+    - attributes
+    type: object
   products.ProductVariant:
     properties:
       attribute:
@@ -205,6 +229,13 @@ definitions:
     - images
     - price
     - quantity
+    type: object
+  products.VariantCombinationResponse:
+    properties:
+      combination:
+        items:
+          type: string
+        type: array
     type: object
   profile.ChangePasswordRequest:
     properties:
@@ -430,6 +461,23 @@ paths:
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"Google OAuth Login"'
+      tags:
+      - Auth
+  /auth/google-logout:
+    get:
+      consumes:
+      - application/json
+      description: '"Logout via Google OAuth"'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: '"Google OAuth Logout"'
       tags:
       - Auth
   /auth/login:
@@ -784,6 +832,40 @@ paths:
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
       summary: '"store a product"'
+      tags:
+      - Products
+  /products/generate-variant-combinations:
+    post:
+      consumes:
+      - application/json
+      description: '"generate variant attribute combinations for a product"'
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/products.GenerateCombinationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: combinations
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/products.VariantCombinationResponse'
+              type: array
+            type: array
+        "404":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"generate variant attribute combinations"'
       tags:
       - Products
   /profile:

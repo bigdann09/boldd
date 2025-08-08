@@ -41,6 +41,8 @@ func (qry *AttributeQuery) GetAll(filter *dtos.AttributeQueryFilter) (utils.Pagi
 		)
 	}
 
+	fmt.Println("Attribute key", key)
+
 	qry.logger.Info("retrieving from cache if data exists else setting to cache")
 	attributes, err := qry.attributeAllCache.GetOrSet(
 		key,

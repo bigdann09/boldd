@@ -20,6 +20,7 @@ func (router *Routes) SetupRoutes() *gin.Engine {
 	router.authroutes()
 	router.healthroute()
 	router.metricsroute()
+	router.productroutes()
 	router.swaggerroutes()
 	router.profileroutes()
 	router.categoryroutes()

@@ -312,6 +312,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/google-logout": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "\"Logout via Google OAuth\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "\"Google OAuth Logout\"",
+                "responses": {
+                    "400": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "\"Login user\"",
@@ -835,6 +863,58 @@ const docTemplate = `{
                         "description": "No Content",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/generate-variant-combinations": {
+            "post": {
+                "description": "\"generate variant attribute combinations for a product\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "\"generate variant attribute combinations\"",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/products.GenerateCombinationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "combinations",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/products.VariantCombinationResponse"
+                                }
+                            }
                         }
                     },
                     "404": {
@@ -1426,6 +1506,28 @@ const docTemplate = `{
                 }
             }
         },
+        "products.AttributeCombination": {
+            "type": "object",
+            "required": [
+                "attribute_id",
+                "name",
+                "values"
+            ],
+            "properties": {
+                "attribute_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "products.CreateProductRequest": {
             "type": "object",
             "required": [
@@ -1459,6 +1561,20 @@ const docTemplate = `{
                 }
             }
         },
+        "products.GenerateCombinationRequest": {
+            "type": "object",
+            "required": [
+                "attributes"
+            ],
+            "properties": {
+                "attributes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/products.AttributeCombination"
+                    }
+                }
+            }
+        },
         "products.ProductVariant": {
             "type": "object",
             "required": [
@@ -1488,6 +1604,17 @@ const docTemplate = `{
                 },
                 "quantity": {
                     "type": "integer"
+                }
+            }
+        },
+        "products.VariantCombinationResponse": {
+            "type": "object",
+            "properties": {
+                "combination": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

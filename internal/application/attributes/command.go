@@ -32,7 +32,7 @@ func NewAttributeCommand(
 }
 
 func (cmd AttributeCommand) Create(payload *CreateAttributeRequest) interface{} {
-	cmd.logger.Info("check if category already exist")
+	cmd.logger.Info("check if attribute already exist")
 	if exists := cmd.attributeRepository.AttributeExists(payload.Name); exists {
 		cmd.logger.Warn("attribute already exists/stored", zap.String("attribute", payload.Name))
 		return dtos.ErrorResponse{Message: "attribute already stored", Status: http.StatusBadRequest}
@@ -47,7 +47,10 @@ func (cmd AttributeCommand) Create(payload *CreateAttributeRequest) interface{} 
 	}
 
 	cmd.logger.Info("invalidating cache")
-	cmd.attributeCache.Delete("attributes:all")
+	if err := cmd.attributeCache.Delete("attributes:all"); err != nil {
+		return dtos.ErrorResponse{Message: "could not clear old records", Status: http.StatusInternalServerError}
+	}
+
 	return nil
 }
 
@@ -66,7 +69,9 @@ func (cmd AttributeCommand) Delete(id string) interface{} {
 	}
 
 	cmd.logger.Info("invalidate cache")
-	cmd.attributeCache.Delete("attributes:all")
+	if err := cmd.attributeCache.Delete("attributes:all"); err != nil {
+		return dtos.ErrorResponse{Message: "could not clear old records", Status: http.StatusInternalServerError}
+	}
 	return nil
 }
 
@@ -85,6 +90,8 @@ func (cmd AttributeCommand) Update(id string, payload *UpdateAttributeRequest) i
 	}
 
 	cmd.logger.Info("invalidate cache")
-	cmd.attributeCache.Delete("attributes:all")
+	if err := cmd.attributeCache.Delete("attributes:all"); err != nil {
+		return dtos.ErrorResponse{Message: "could not clear old records", Status: http.StatusInternalServerError}
+	}
 	return nil
 }
