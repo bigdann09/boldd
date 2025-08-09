@@ -9,7 +9,7 @@ devrun:
 	go run cmd/api/main.go
 
 dockerrun:
-	docker compose watch
+	docker compose -f docker-compose.dev.yml watch
 
 migrate_create:
 	migrate create -ext=sql -dir=${MIGRATION_PATH} -seq ${name}

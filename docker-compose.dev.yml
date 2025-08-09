@@ -4,10 +4,11 @@ services:
     build:
       context: .
       dockerfile: docker/api/Dockerfile
+    image: boldd:latest
     ports:
-      - 8003:8003
+      - "8003:8003"
     volumes:
-      - ${HOME}/.config/boldd/config.yaml:app/boldd/config.yaml:ro
+      - ${HOME}/.config/boldd/config.yaml:/app/boldd/config.yaml:ro
     networks:
       - boldd_api
     depends_on:
