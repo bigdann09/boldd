@@ -10,5 +10,5 @@ FROM alpine:latest
 RUN mkdir -p /app/boldd
 COPY --from=builder /src/boldd /app/boldd/boldd
 WORKDIR /app/boldd
-EXPOSE ${APP_PORT:-8003}
+EXPOSE 8003
 CMD ["./boldd"]

@@ -2,6 +2,6 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'prometheus-go'
+  - job_name: boldd
     static_configs:
-      - targets: ['boldd:8080']
+      - targets: ['bolddapi:8003']

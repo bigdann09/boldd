@@ -36,6 +36,30 @@ services:
       timeout: 5s
       retries: 5
 
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.55.0
+    volumes:
+      - docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - boldd_api
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:11.3.0
+    volumes:
+      - docker/grafana.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - boldd_api
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-password}
+
   migrate:
     image: migrate/migrate
     container_name: boldd_migrations
@@ -54,3 +78,4 @@ networks:
 
 volumes:
   postgres_data: {}
+  grafana_data:: {}
