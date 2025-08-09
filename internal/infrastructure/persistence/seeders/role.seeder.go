@@ -12,7 +12,7 @@ func (seeder *Seeder) roleSeeder() {
 	count, _ := roleRepository.Count()
 	if count == 0 {
 		seeder.logger.Info("seeding to database since count is zero(0)")
-		roles := []string{"customer", "admin", "merchant"}
+		roles := []string{"customer", "admin", "vendor"}
 		for _, name := range roles {
 			seeder.logger.Info("adding role to database", zap.String("role", name))
 			roleRepository.Create(entities.NewRole(name))
