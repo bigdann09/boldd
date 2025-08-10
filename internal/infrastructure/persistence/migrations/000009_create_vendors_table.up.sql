@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS vendors (
     banner_url TEXT,
     logo_url TEXT,
     description TEXT,
-    status VARCHAR(50) NOT NULL CHECK (status IN ('pending', 'processing', 'verified')) DEFAULT 'pending',
+    status VARCHAR(50) NOT NULL CHECK (status IN ('pending', 'active', 'suspended', 'closed')) DEFAULT 'pending',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

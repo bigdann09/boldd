@@ -1,16 +1,31 @@
 services:
-  bolddapi:
+  api:
     container_name: boldd
     build:
       context: .
       dockerfile: docker/api/Dockerfile
     image: boldd:latest
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASS: ${DATABASE_PASS}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_SSLMODE: ${DATABASE_SSLMODE}
+      REDIS_DB: ${REDIS_DB}
+      REDIS_ADDRESS: ${REDIS_ADDRESS}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_PROTOCOL: ${REDIS_PROTOCOL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_CALLBACK_URI: ${GOOGLE_CALLBACK_URI}
     ports:
-      - "8003:8003"
+      - 8003:8003
     volumes:
       - ${HOME}/.config/boldd/config.yaml:/app/boldd/config.yaml:ro
     networks:
-      - boldd_api
+      - boldd_network
     depends_on:
       - postgresdb
     develop:
@@ -21,17 +36,17 @@ services:
   postgresdb:
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-boldd}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - ":5432"
+      - :${DATABASE_PORT}
     volumes:
       - postgres_data:/var/lib/postgres/data
     networks:
-      - boldd_api
+      - boldd_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-boldd}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,42 +55,44 @@ services:
     container_name: prometheus
     image: prom/prometheus:v2.55.0
     volumes:
-      - docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
-      - boldd_api
+      - boldd_network
 
   grafana:
     container_name: grafana
     image: grafana/grafana:11.3.0
     volumes:
-      - docker/grafana.yml:/etc/grafana/provisioning/datasources/datasource.yaml
-      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/grafana.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - grafana_data:/var/lib/grafana
     ports:
-      - "3000:3000"
+      - 3000:3000
     networks:
-      - boldd_api
+      - boldd_network
+    depends_on:
+      - prometheus
     environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-password}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
 
   migrate:
     image: migrate/migrate
     container_name: boldd_migrations
     volumes:
       - ./internal/infrastructure/persistence/migrations:/migrations:ro
-    command: ["-path", "/migrations", "-database", "postgres://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgresdb:5432/${DB_NAME:-boldd}?sslmode=disable", "up"]
+    command: ["-path", "/migrations", "-database", "postgres://${DB_USER}:${DB_PASSWORD}@postgresdb:${DATABASE_PORT}/${DB_NAME}?sslmode=${DATABASE_SSLMODE}", "up"]
     depends_on:
       postgresdb:
         condition: service_healthy
     networks:
-        - boldd_api
+        - boldd_network
 
 networks:
-  boldd_api:
+  boldd_network:
     driver: bridge
 
 volumes:
   postgres_data: {}
-  grafana_data:: {}
+  grafana_data: {}
