@@ -41,10 +41,10 @@ type CorsConfig struct {
 }
 
 type RedisConfig struct {
-	Address  string `mapstructure:"address"`
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
-	Protocol int    `mapstructure:"protocol"`
 }
 
 type AWSConfig struct {
@@ -99,8 +99,10 @@ func Load(path string) (*Config, error) {
 }
 
 func LoadConfigPath() (string, error) {
-	if err := godotenv.Load(); err != nil {
-		return "", err
+	if os.Getenv("DOCKER_ENV") != "true" {
+		if err := godotenv.Load(); err != nil {
+			return "", err
+		}
 	}
 
 	env := os.Getenv("ENVIRONMENT")
@@ -145,8 +147,8 @@ func (cfg *Config) LoadDatabaseConfig() {
 func (cfg *Config) LoadRedisConfig() {
 	cfg.RedisConfig = RedisConfig{
 		DB:       viper.GetInt("REDIS_DB"),
-		Address:  viper.GetString("REDIS_ADDRESS"),
+		Host:     viper.GetString("REDIS_HOST"),
 		Password: viper.GetString("REDIS_PASSWORD"),
-		Protocol: viper.GetInt("REDIS_PROTOCOL"),
+		Port:     viper.GetString("REDIS_PORT"),
 	}
 }

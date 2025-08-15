@@ -8,10 +8,18 @@ func (r Routes) vendorroutes() {
 	vendors := r.engine.Group("vendors/")
 	vendors.Use(r.middlewares.Auth())
 	{
-		vendors.GET("", r.middlewares.Admin(), ctrl.Index)
 		vendors.POST("", ctrl.Store)
-		vendors.DELETE("/:id", r.middlewares.Admin(), ctrl.Delete)
-		vendors.PUT("/:id/upload/logo", r.middlewares.Vendor(), ctrl.UpdateLogo)
-		vendors.PUT("/:id/upload/banner", r.middlewares.Vendor(), ctrl.UpdateBanner)
+		vendors.Use(r.middlewares.Vendor())
+		{
+			vendors.PUT("/:id/upload/logo", ctrl.UpdateLogo)
+			vendors.PUT("/:id/upload/banner", ctrl.UpdateBanner)
+		}
+
+		vendors.Use(r.middlewares.Admin())
+		{
+			vendors.GET("", ctrl.Index)
+			vendors.DELETE("/:id", ctrl.Delete)
+		}
+
 	}
 }
