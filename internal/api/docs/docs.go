@@ -1261,6 +1261,11 @@ const docTemplate = `{
         },
         "/vendors": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "\"get all vendors\"",
                 "consumes": [
                     "application/json"
@@ -1299,6 +1304,49 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "\"store vendors\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "\"store vendors\"",
+                "parameters": [
+                    {
+                        "description": "Create vendor payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vendors.CreateVendorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "500": {
                         "description": "body",
                         "schema": {
@@ -1705,6 +1753,37 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "vendors.CreateVendorRequest": {
+            "type": "object",
+            "required": [
+                "business_address",
+                "business_email",
+                "business_phone",
+                "description",
+                "name"
+            ],
+            "properties": {
+                "business_address": {
+                    "type": "string"
+                },
+                "business_email": {
+                    "type": "string"
+                },
+                "business_phone": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 20
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 6
                 }
             }
         }

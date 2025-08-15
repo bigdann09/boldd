@@ -38,3 +38,5 @@ func main() {
 	<-server.Done
 	log.Println("👋 Server shutdown gracefully...")
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MiwiRW1haWwiOiJkYW5uQGdtYWlsLmNvbSIsImlzcyI6IjIiLCJzdWIiOiIyIiwiZXhwIjoxNzU1MzAwMjYxLCJpYXQiOjE3NTUyOTMwNjEsImp0aSI6IjIifQ.o5Caioq3eVkheyGQHMS3jPIMznDOSZXAiOTEno89Fs4

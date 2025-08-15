@@ -264,6 +264,29 @@ definitions:
     required:
     - name
     type: object
+  vendors.CreateVendorRequest:
+    properties:
+      business_address:
+        type: string
+      business_email:
+        type: string
+      business_phone:
+        type: string
+      description:
+        maxLength: 500
+        minLength: 20
+        type: string
+      name:
+        maxLength: 100
+        minLength: 6
+        type: string
+    required:
+    - business_address
+    - business_email
+    - business_phone
+    - description
+    - name
+    type: object
 info:
   contact:
     email: dann.dev09@gmail.com
@@ -1110,7 +1133,36 @@ paths:
           description: body
           schema:
             $ref: '#/definitions/dtos.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: '"get all vendors"'
+      tags:
+      - Vendors
+    post:
+      consumes:
+      - application/json
+      description: '"store vendors"'
+      parameters:
+      - description: Create vendor payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/vendors.CreateVendorRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: '"store vendors"'
       tags:
       - Vendors
 securityDefinitions:
