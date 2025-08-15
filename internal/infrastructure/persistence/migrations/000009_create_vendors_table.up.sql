@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS vendors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID UNIQUE REFERENCES users(id) ON DELETE RESTRICT,
+    user_id INTEGER UNIQUE REFERENCES users(id) ON DELETE RESTRICT,
     name VARCHAR(255) NOT NULL,
     business_email VARCHAR(255) NOT NULL,
     business_address TEXT NOT NULL,

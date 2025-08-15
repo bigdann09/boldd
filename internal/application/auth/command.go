@@ -90,10 +90,17 @@ func (srv *AuthCommandService) Register(payload *RegisterRequest) interface{} {
 	if err := srv.mailer.To(newUser.Email).Subject("Registration Complete").
 		Body(mail.NewRegistrationMail(newUser.Fullname, otpCode)).
 		Send(); err != nil {
+		srv.logger.Info("deleting new user record")
+		srv.userRepository.Delete(int(newUser.ID))
+
+		srv.logger.Info("deleting otp record for user")
+		srv.otpRepository.DeleteByEmail(newUser.Email)
+
 		srv.logger.Error("error sending email to user", zap.Error(err))
 		return dtos.ErrorResponse{Message: "there was an error creating user account", Status: http.StatusInternalServerError}
 	}
 
+	srv.logger.Info("user registered successfully")
 	return nil
 }
 

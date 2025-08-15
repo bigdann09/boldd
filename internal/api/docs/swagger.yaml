@@ -1081,6 +1081,38 @@ paths:
       summary: '"update a single subcategory"'
       tags:
       - Subcategories
+  /vendors:
+    get:
+      consumes:
+      - application/json
+      description: '"get all vendors"'
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page data size
+        in: query
+        name: page_size
+        type: integer
+      - description: sort by
+        in: query
+        name: sort_by
+        type: string
+      - description: order
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: '"get all vendors"'
+      tags:
+      - Vendors
 securityDefinitions:
   BearerAuth:
     in: header

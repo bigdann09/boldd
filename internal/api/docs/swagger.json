@@ -1247,6 +1247,55 @@
                     }
                 }
             }
+        },
+        "/vendors": {
+            "get": {
+                "description": "\"get all vendors\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "\"get all vendors\"",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page data size",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sort by",
+                        "name": "sort_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "order",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
