@@ -18,6 +18,7 @@ type Config struct {
 	RedisConfig
 	GoogleOAuthConfig
 	DatabaseConfig
+	CloudinaryConfig
 }
 
 type ApplicationConfig struct {
@@ -71,6 +72,12 @@ type GoogleOAuthConfig struct {
 	CallbackURL  string
 }
 
+type CloudinaryConfig struct {
+	CloudName string
+	Key       string
+	Secret    string
+}
+
 func Load(path string) (*Config, error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
@@ -91,9 +98,11 @@ func Load(path string) (*Config, error) {
 	}
 
 	log.Println("Load application core configs")
+	cfg.LoadMailConfig()
 	cfg.LoadDatabaseConfig()
 	cfg.LoadRedisConfig()
 	cfg.LoadGoogleConfig()
+	cfg.LoadCloudinaryConfig()
 
 	return &cfg, nil
 }
@@ -150,5 +159,23 @@ func (cfg *Config) LoadRedisConfig() {
 		Host:     viper.GetString("REDIS_HOST"),
 		Password: viper.GetString("REDIS_PASSWORD"),
 		Port:     viper.GetString("REDIS_PORT"),
+	}
+}
+
+func (cfg *Config) LoadCloudinaryConfig() {
+	cfg.CloudinaryConfig = CloudinaryConfig{
+		CloudName: viper.GetString("CLOUDINARY_CLOUD_NAME"),
+		Key:       viper.GetString("CLOUDINARY_API_KEY"),
+		Secret:    viper.GetString("CLOUDINARY_API_SECRET"),
+	}
+}
+
+func (cfg *Config) LoadMailConfig() {
+	cfg.MailConfig = MailConfig{
+		Host:     viper.GetString("MAIL_HOST"),
+		Port:     viper.GetInt("MAIL_PORT"),
+		From:     viper.GetString("MAIL_FROM"),
+		Username: viper.GetString("MAIL_USERNAME"),
+		Password: viper.GetString("MAIL_PASSWORD"),
 	}
 }

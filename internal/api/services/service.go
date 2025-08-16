@@ -9,6 +9,7 @@ import (
 	"github.com/boldd/internal/infrastructure/persistence"
 	"github.com/boldd/internal/infrastructure/persistence/redis"
 	seeder "github.com/boldd/internal/infrastructure/persistence/seeders"
+	"github.com/boldd/internal/infrastructure/storage"
 	"github.com/boldd/internal/infrastructure/validator"
 	"github.com/boldd/pkgs/logger"
 	goredis "github.com/redis/go-redis/v9"
@@ -17,11 +18,12 @@ import (
 )
 
 type Service struct {
-	DB     *gorm.DB
-	Logger *zap.Logger
-	Redis  *goredis.Client
-	Token  jwt.ITokenService
-	Mail   mail.IMail
+	DB      *gorm.DB
+	Logger  *zap.Logger
+	Redis   *goredis.Client
+	Token   jwt.ITokenService
+	Storage storage.ICloudinary
+	Mail    mail.IMail
 }
 
 func NewServices(cfg *config.Config) *Service {
@@ -46,18 +48,32 @@ func NewServices(cfg *config.Config) *Service {
 	// register token service
 	jwt := jwt.NewTokenService(&cfg.JWTConfig)
 
+	// register cloudinary
+	cloudinary, err := storage.NewCloudinary(&cfg.CloudinaryConfig)
+	if err != nil {
+		log.Println("could not initialize cloudinary")
+		panic(err)
+	}
+
 	// register seeders
 	seeder := seeder.NewSeeder(db, logger)
 	seeder.Run()
 
 	// register mail
-	mail := mail.NewMail("dann@gmail.com", "", "", "localhost", 1025)
+	mail := mail.NewMail(
+		cfg.MailConfig.From,
+		cfg.MailConfig.Username,
+		cfg.MailConfig.Password,
+		cfg.MailConfig.Host,
+		cfg.MailConfig.Port,
+	)
 
 	return &Service{
-		DB:     db,
-		Logger: logger,
-		Redis:  redis,
-		Token:  jwt,
-		Mail:   mail,
+		DB:      db,
+		Logger:  logger,
+		Redis:   redis,
+		Token:   jwt,
+		Mail:    mail,
+		Storage: cloudinary,
 	}
 }
