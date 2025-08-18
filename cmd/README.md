@@ -1,4 +1,4 @@
-# BoldD Project
+# Boldd Project
 
 ## Table of Contents
 
@@ -12,26 +12,40 @@
 - [API Documentation](#api-documentation)
 - [Caching](#caching)
 - [Mail Templates](#mail-templates)
-- [Testing](#testing)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 
 ## Introduction
 
-BoldD is a Go-based backend application designed to handle various functionalities such as user authentication, profile management, category and subcategory management, and more. It leverages modern libraries and frameworks like Gin for HTTP routing, GORM for database interactions, and Redis for caching.
+BoldD is a multivendor eCommerce API designed to handle a wide range of functionalities required for a modern eCommerce platform. It supports features like user authentication, vendor management, product management, order processing, and more. The API is built using Go and leverages modern libraries and frameworks like Gin for HTTP routing, GORM for database interactions, and Redis for caching. The project is currently under active development.
+
 
 ---
 
 ## Features
 
-- **User Authentication**: Includes user registration, OTP verification, and role assignment.
-- **Profile Management**: Allows users to view and update their profiles, including password changes.
-- **Category and Subcategory Management**: CRUD operations for categories and subcategories.
-- **Caching**: Implements Redis caching for optimized performance.
-- **Email Notifications**: Sends registration and OTP emails using pre-defined templates.
-- **Database Migrations**: Supports database schema management using `migrate`.
+### Core Features
+- **User Authentication**: Includes user registration, OTP verification, login, and role-based access control.
+- **Vendor Management**: Allows vendors to register, manage their profiles, and list products.
+- **Product Management**: CRUD operations for products, categories, and subcategories.
+- **Order Management**: Handles order placement, tracking, and status updates.
+- **Cart Management**: Supports adding, updating, and removing items from the cart.
+- **Transaction Management**: Manages payment processing and transaction history.
+- **Invoice Generation**: Automatically generates invoices for completed orders.
+- **Shipping and Delivery**: Tracks shipping details and delivery status.
+- **Wishlist**: Allows users to save products for future purchases.
+- **Review and Ratings**: Enables users to review and rate products.
+- **Multivendor Support**: Allows multiple vendors to sell their products on the platform.
+
+### Additional Features
+- **Admin Dashboard**: Provides an interface for administrators to manage users, vendors, and products.
+- **Notifications**: Sends email and in-app notifications for order updates, promotions, and more.
+- **Analytics and Reporting**: Tracks sales, revenue, and other key metrics.
+- **Discounts and Coupons**: Supports promotional discounts and coupon codes.
+- **Search and Filters**: Implements advanced search and filtering options for products.
+- **Inventory Management**: Tracks stock levels and notifies vendors of low inventory.
+- **Multilingual and Multi-Currency Support**: Supports multiple languages and currencies for global reach.
 
 ---
 
@@ -136,3 +150,107 @@ The application uses environment variables for configuration. Below are the key 
 - Grafana Configuration:
     - GRAFANA_USER
     - GRAFANA_PASSWORD
+
+Refer to the `internal/config/config.go` file for more details.
+
+---
+## Configuring `config.yaml`
+The `config.yaml` file is used to centralize application configuration. It is stored in the `$HOME/.config/boldd/config.yaml`
+
+```yaml
+application:
+  port: 8003
+  url: "URL"
+  timezone: "TIMEZONE"
+  environment: "ENVIRONMENT"
+cors:
+  allowed_origins: ["ORIGIN1", "ORIGIN2"]
+jwt:
+  key: "JWT KEY"
+  access_expiry: EXPIRY IN HOUR (2 means 2 hours)
+  refresh_expiry: EXPIRATION IN HOUR
+```
+
+Steps to Setup config.yaml
+1. Navigate to the `$HOME/.config/boldd/` directory:
+```bash
+mkdir -p $HOME/.config/boldd
+```
+
+2. Create the `config.yaml` file:
+```bash
+mkdir -p $HOME/.config/boldd
+```
+
+1. Copy the example structure above into the file.
+2. Update the values based on your environment (e.g., database credentials, Redis host, mail server settings).
+3. Save and close the file.
+
+The application will automatically load the config.yaml file from this location during startup. Ensure the file is properly formatted and contains all required fields.
+
+---
+### Running the Application
+Local Development
+
+1. Start the application
+```bash
+air
+```
+
+2. Access the application at `http://localhost:8003`.
+
+---
+## Database Migrations
+Creating a New Migration
+```bash
+make migrate_create name=<migration_name>
+```
+
+Running the Migrations
+```bash
+make migrate_up
+```
+
+Rolling Back Migrations
+```bash
+make migrate_down
+```
+
+---
+## API Documentation
+The project uses Swagger for API documentation. To generate the documentation:
+
+```bash
+make swag-generate
+```
+
+Access the documentation at `http://localhost:8003/swagger/index.html`
+
+---
+## Caching
+The application uses Redis for caching. The `Cache` utility in `internal/infrastructure/cache/redis.go` provides methods for:
+
+- Setting and retrieving cached values
+Setting and retrieving cached values
+- Invalidating cache entries
+
+---
+## Mail Templates
+The application includes pre-defined email templates for user registration and OTP verification. These templates are located in:
+
+```bash
+internal/infrastructure/mail/templates/
+```
+
+- `register.html`: Used for registration emails.
+- `reset.html`: Used for password reset emails.
+- `resend.html`: Used for OTP resend emails.
+
+---
+## Contributing
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes and push them to your fork.
+4. Submit a pull request.
