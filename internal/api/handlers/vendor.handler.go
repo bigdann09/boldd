@@ -68,6 +68,17 @@ func (ctrl VendorController) Store(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
+// @Summary		"Update vendor logo"
+// @Description	"Update vendor logo"
+// @Tags			Vendors
+// @Accept			mpfd
+// @Produce		json
+// @Schemes
+// @Param		image	formData		file	true	"Logo image file"
+// @Success	201		{string}	null								"No Content"
+// @Failure	500		{object}	dtos.ErrorResponse					"body"
+// @Security	BearerAuth
+// @Router		/vendors/{id}/upload/logo [put]
 func (ctrl VendorController) UpdateLogo(c *gin.Context) {
 
 }

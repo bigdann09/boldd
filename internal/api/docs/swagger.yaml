@@ -1165,6 +1165,33 @@ paths:
       summary: '"store vendors"'
       tags:
       - Vendors
+  /vendors/{id}/upload/logo:
+    put:
+      consumes:
+      - multipart/form-data
+      description: '"Update vendor logo"'
+      parameters:
+      - description: Logo image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: body
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: '"Update vendor logo"'
+      tags:
+      - Vendors
 securityDefinitions:
   BearerAuth:
     in: header
