@@ -1,0 +1,79 @@
+WORLDBANC CONFIDENTIAL MONTHLY REPORT
+======================================
+Report Period: January 2026
+Classification: INTERNAL USE ONLY
+Generated: January 28, 2026
+
+EXECUTIVE SUMMARY
+-----------------
+Total Active Customers: 20
+Total Assets Under Management: $428,719.35
+Average Account Balance: $21,435.97
+New Accounts Opened: 0
+Accounts Closed: 0
+Customer Retention Rate: 100%
+
+ACCOUNT BREAKDOWN
+-----------------
+Premium Accounts:    7 customers  |  $138,971.35  |  32.4%
+Standard Accounts:   7 customers  |  $20,573.05   |  4.8%
+Business Accounts:   6 customers  |  $269,174.95  |  62.8%
+
+REVENUE ANALYSIS
+----------------
+Monthly Fee Revenue: $285.00
+Transaction Fee Revenue: $1,245.00
+Wire Transfer Fees: $375.00
+Overdraft Fees: $0.00
+Total Monthly Revenue: $1,905.00
+
+TRANSACTION METRICS
+-------------------
+Total Transactions Processed: 40
+Average Transactions per Customer: 2.0
+Transaction Success Rate: 100%
+Average Transaction Value: $1,147.28
+
+RISK ASSESSMENT
+---------------
+Accounts Below Minimum Balance: 2
+Overdraft Protection Active: 6 accounts
+Fraud Alerts: 0
+Suspicious Activity Reports: 0
+Risk Level: LOW
+
+CUSTOMER SATISFACTION
+---------------------
+Customer Service Calls: 12
+Average Resolution Time: 8 minutes
+Complaint Rate: 0%
+Net Promoter Score: 87
+
+COMPLIANCE STATUS
+-----------------
+KYC Documentation: 100% complete
+AML Screening: Current
+Regulatory Filings: Up to date
+Audit Status: Compliant
+
+GROWTH PROJECTIONS
+------------------
+Projected Q1 2026 Growth: 5%
+Target New Customers: 5
+Target AUM Growth: $50,000
+
+RECOMMENDATIONS
+---------------
+1. Increase marketing efforts for Premium accounts
+2. Launch business banking promotion
+3. Enhance mobile banking features
+4. Implement automated savings programs
+5. Expand ATM network partnerships
+
+NEXT REVIEW DATE: February 28, 2026
+
+Prepared by: Financial Analysis Department
+Approved by: Chief Financial Officer
+Distribution: Executive Team Only
+
+END OF REPORT

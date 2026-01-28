@@ -1,0 +1,21 @@
+customer_id,full_name,email,phone,address,city,state,zip_code,date_of_birth,ssn_last4,account_opened
+WB001,Sarah Johnson,sarah.johnson@email.com,555-0101,123 Maple Street,Springfield,IL,62701,1985-03-15,1234,2020-01-15
+WB002,Michael Chen,michael.chen@email.com,555-0102,456 Oak Avenue,Portland,OR,97201,1990-07-22,2345,2019-05-20
+WB003,Emily Rodriguez,emily.rodriguez@email.com,555-0103,789 Pine Road,Austin,TX,78701,1988-11-30,3456,2021-03-10
+WB004,James Williams,james.williams@email.com,555-0104,321 Elm Boulevard,Seattle,WA,98101,1982-09-08,4567,2018-08-25
+WB005,Maria Garcia,maria.garcia@email.com,555-0105,654 Cedar Lane,Miami,FL,33101,1995-02-14,5678,2022-01-05
+WB006,David Kim,david.kim@email.com,555-0106,987 Birch Drive,Boston,MA,02101,1987-06-19,6789,2019-11-12
+WB007,Jennifer Martinez,jennifer.martinez@email.com,555-0107,147 Willow Court,Denver,CO,80201,1992-04-25,7890,2020-07-18
+WB008,Robert Taylor,robert.taylor@email.com,555-0108,258 Spruce Way,Phoenix,AZ,85001,1980-12-03,8901,2017-09-30
+WB009,Lisa Anderson,lisa.anderson@email.com,555-0109,369 Ash Street,Atlanta,GA,30301,1989-08-17,9012,2021-02-22
+WB010,Christopher Lee,christopher.lee@email.com,555-0110,741 Poplar Avenue,Chicago,IL,60601,1993-01-28,0123,2022-04-14
+WB011,Amanda White,amanda.white@email.com,555-0111,852 Hickory Road,Nashville,TN,37201,1986-10-11,1235,2019-06-08
+WB012,Daniel Brown,daniel.brown@email.com,555-0112,963 Walnut Boulevard,San Diego,CA,92101,1991-05-06,2346,2020-10-19
+WB013,Jessica Davis,jessica.davis@email.com,555-0113,159 Chestnut Lane,Philadelphia,PA,19101,1994-09-23,3457,2021-12-03
+WB014,Matthew Wilson,matthew.wilson@email.com,555-0114,357 Sycamore Drive,Dallas,TX,75201,1983-07-14,4568,2018-03-27
+WB015,Ashley Thompson,ashley.thompson@email.com,555-0115,486 Magnolia Court,San Francisco,CA,94101,1990-11-09,5679,2020-05-11
+WB016,Joshua Moore,joshua.moore@email.com,555-0116,624 Dogwood Way,Minneapolis,MN,55401,1996-03-31,6780,2022-08-16
+WB017,Samantha Jackson,samantha.jackson@email.com,555-0117,735 Redwood Street,Detroit,MI,48201,1988-12-20,7891,2019-10-05
+WB018,Andrew Martin,andrew.martin@email.com,555-0118,846 Cypress Avenue,Las Vegas,NV,89101,1985-06-07,8902,2021-01-29
+WB019,Elizabeth Harris,elizabeth.harris@email.com,555-0119,957 Fir Road,Columbus,OH,43201,1992-02-18,9013,2020-09-21
+WB020,Ryan Clark,ryan.clark@email.com,555-0120,168 Juniper Boulevard,Charlotte,NC,28201,1987-08-26,0124,2019-12-14

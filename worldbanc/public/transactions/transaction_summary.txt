@@ -1,0 +1,51 @@
+WORLDBANC TRANSACTION SUMMARY
+=============================
+Report Period: January 2026
+Generated: January 28, 2026
+
+TRANSACTION STATISTICS
+----------------------
+Total Transactions: 40
+Total Volume: $45,891.29
+
+BY TRANSACTION TYPE:
+-------------------
+DEPOSIT:        15 transactions  |  $21,400.00  |  46.6%
+WITHDRAWAL:     10 transactions  |  $1,500.00   |  3.3%
+PAYMENT:        10 transactions  |  $1,491.29   |  3.2%
+TRANSFER:       5 transactions   |  $21,500.00  |  46.9%
+
+BY ACCOUNT TYPE:
+---------------
+Premium:        12 transactions  |  $15,789.99  |  34.4%
+Standard:       14 transactions  |  $8,101.30   |  17.7%
+Business:       14 transactions  |  $22,000.00  |  47.9%
+
+DAILY AVERAGE:
+-------------
+Transactions per Day: 1.43
+Average Transaction Amount: $1,147.28
+
+PEAK TRANSACTION TIMES:
+----------------------
+Morning (8am-12pm):    18 transactions  |  45.0%
+Afternoon (12pm-5pm):  20 transactions  |  50.0%
+Evening (5pm-8pm):     2 transactions   |   5.0%
+
+TOP TRANSACTION CATEGORIES:
+--------------------------
+1. Business Transfers: $21,500.00
+2. Direct Deposits: $12,650.00
+3. Client Payments: $8,750.00
+4. ATM Withdrawals: $1,500.00
+5. Bill Payments: $1,491.29
+
+FRAUD ALERTS: 0
+DECLINED TRANSACTIONS: 0
+PENDING TRANSACTIONS: 0
+
+For detailed transaction history, please contact customer service
+or access your account through WorldBanc Online Banking.
+
+Customer Service: 1-800-WORLDBANC
+Online Banking: www.worldbanc.com

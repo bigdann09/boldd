@@ -1,0 +1,126 @@
+WORLDBANC EMERGENCY CONTACTS DATABASE
+======================================
+CONFIDENTIAL - AUTHORIZED ACCESS ONLY
+
+Customer ID: WB001
+Emergency Contact: John Johnson (Spouse)
+Phone: 555-0201
+Relationship: Husband
+---
+
+Customer ID: WB002
+Emergency Contact: Lisa Chen (Sister)
+Phone: 555-0202
+Relationship: Sibling
+---
+
+Customer ID: WB003
+Emergency Contact: Carlos Rodriguez (Father)
+Phone: 555-0203
+Relationship: Parent
+---
+
+Customer ID: WB004
+Emergency Contact: Patricia Williams (Mother)
+Phone: 555-0204
+Relationship: Parent
+---
+
+Customer ID: WB005
+Emergency Contact: Juan Garcia (Brother)
+Phone: 555-0205
+Relationship: Sibling
+---
+
+Customer ID: WB006
+Emergency Contact: Susan Kim (Wife)
+Phone: 555-0206
+Relationship: Spouse
+---
+
+Customer ID: WB007
+Emergency Contact: Roberto Martinez (Father)
+Phone: 555-0207
+Relationship: Parent
+---
+
+Customer ID: WB008
+Emergency Contact: Mary Taylor (Sister)
+Phone: 555-0208
+Relationship: Sibling
+---
+
+Customer ID: WB009
+Emergency Contact: Thomas Anderson (Husband)
+Phone: 555-0209
+Relationship: Spouse
+---
+
+Customer ID: WB010
+Emergency Contact: Grace Lee (Mother)
+Phone: 555-0210
+Relationship: Parent
+---
+
+Customer ID: WB011
+Emergency Contact: Steven White (Brother)
+Phone: 555-0211
+Relationship: Sibling
+---
+
+Customer ID: WB012
+Emergency Contact: Rachel Brown (Wife)
+Phone: 555-0212
+Relationship: Spouse
+---
+
+Customer ID: WB013
+Emergency Contact: Mark Davis (Father)
+Phone: 555-0213
+Relationship: Parent
+---
+
+Customer ID: WB014
+Emergency Contact: Laura Wilson (Sister)
+Phone: 555-0214
+Relationship: Sibling
+---
+
+Customer ID: WB015
+Emergency Contact: Kevin Thompson (Husband)
+Phone: 555-0215
+Relationship: Spouse
+---
+
+Customer ID: WB016
+Emergency Contact: Nancy Moore (Mother)
+Phone: 555-0216
+Relationship: Parent
+---
+
+Customer ID: WB017
+Emergency Contact: Paul Jackson (Father)
+Phone: 555-0217
+Relationship: Parent
+---
+
+Customer ID: WB018
+Emergency Contact: Michelle Martin (Wife)
+Phone: 555-0218
+Relationship: Spouse
+---
+
+Customer ID: WB019
+Emergency Contact: Brian Harris (Brother)
+Phone: 555-0219
+Relationship: Sibling
+---
+
+Customer ID: WB020
+Emergency Contact: Karen Clark (Mother)
+Phone: 555-0220
+Relationship: Parent
+---
+
+END OF EMERGENCY CONTACTS DATABASE
+Last Updated: January 28, 2026

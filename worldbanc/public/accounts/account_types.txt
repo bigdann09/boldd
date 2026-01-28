@@ -1,0 +1,52 @@
+WORLDBANC ACCOUNT TYPES
+=======================
+
+STANDARD ACCOUNT
+----------------
+- Minimum Balance: $100
+- Monthly Fee: $5 (waived with $500 minimum balance)
+- ATM Withdrawals: 4 free per month
+- Wire Transfers: $25 per transfer
+- Overdraft Protection: Available
+- Interest Rate: 0.01% APY
+
+PREMIUM ACCOUNT
+---------------
+- Minimum Balance: $5,000
+- Monthly Fee: $15 (waived with $10,000 minimum balance)
+- ATM Withdrawals: Unlimited free
+- Wire Transfers: 2 free per month, then $15 per transfer
+- Overdraft Protection: Included
+- Interest Rate: 0.15% APY
+- Travel Insurance: Included
+- Concierge Service: Available
+
+BUSINESS ACCOUNT
+----------------
+- Minimum Balance: $1,000
+- Monthly Fee: $25 (waived with $25,000 minimum balance)
+- ATM Withdrawals: 10 free per month
+- Wire Transfers: 5 free per month, then $20 per transfer
+- Overdraft Protection: Available
+- Interest Rate: 0.05% APY
+- Business Credit Line: Available
+- Merchant Services: Discounted rates
+- Payroll Services: Available
+
+SAVINGS ACCOUNT
+---------------
+- Minimum Balance: $25
+- Monthly Fee: $0
+- Withdrawals: 6 free per month
+- Interest Rate: 0.25% APY
+- Automatic Transfers: Free
+
+MONEY MARKET ACCOUNT
+--------------------
+- Minimum Balance: $10,000
+- Monthly Fee: $10 (waived with $25,000 minimum balance)
+- Withdrawals: 6 free per month
+- Interest Rate: 0.50% APY (tiered)
+- Check Writing: Limited
+
+For more information, visit your local WorldBanc branch or call 1-800-WORLDBANC

@@ -1,0 +1,28 @@
+WORLDBANC CUSTOMER DIRECTORY
+============================
+Last Updated: January 28, 2026
+
+CUSTOMER_ID | NAME                  | ACCOUNT_TYPE | STATUS
+------------------------------------------------------------------------
+WB001       | Sarah Johnson         | Premium      | Active
+WB002       | Michael Chen          | Standard     | Active
+WB003       | Emily Rodriguez       | Premium      | Active
+WB004       | James Williams        | Business     | Active
+WB005       | Maria Garcia          | Standard     | Active
+WB006       | David Kim             | Premium      | Active
+WB007       | Jennifer Martinez     | Standard     | Active
+WB008       | Robert Taylor         | Business     | Active
+WB009       | Lisa Anderson         | Premium      | Active
+WB010       | Christopher Lee       | Standard     | Active
+WB011       | Amanda White          | Business     | Active
+WB012       | Daniel Brown          | Premium      | Active
+WB013       | Jessica Davis         | Standard     | Active
+WB014       | Matthew Wilson        | Business     | Active
+WB015       | Ashley Thompson       | Premium      | Active
+WB016       | Joshua Moore          | Standard     | Active
+WB017       | Samantha Jackson      | Business     | Active
+WB018       | Andrew Martin         | Premium      | Active
+WB019       | Elizabeth Harris      | Standard     | Active
+WB020       | Ryan Clark           | Business     | Active
+
+Total Active Customers: 20
